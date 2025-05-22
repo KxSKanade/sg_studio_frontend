@@ -24,13 +24,14 @@ export default function Home() {
           className="object-cover transition-all duration-500"
           priority
         />
-      </section>
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <h5 className="text-white text-3xl drop-shadow-lg">
-          Bienvenido ale y vale
-        </h5>
-      </div>
+        {/* ✅ Texto centrado correctamente dentro del section */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h5 className="text-white text-3xl drop-shadow-lg">
+            ...
+          </h5>
+        </div>
+      </section>
     </main>
   );
 }

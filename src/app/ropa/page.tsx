@@ -1,3 +1,4 @@
+'use client';
 import ProductoCard from '../../../components/ProductoCard';
 
 export default function RopaPage() {
@@ -7,13 +8,16 @@ export default function RopaPage() {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6">
-      {productos.map(p => (
-        <ProductoCard key={p.id} producto={p} />
-      ))}
-    </div>
-    <div className="flex justify-center mt-10">
-        <h1 className="text-2xl font-bold">Hola vale y ale</h1>
-    </div>
+    <>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6">
+        {productos.map((p) => (
+          <ProductoCard key={p.id} producto={p} />
+        ))}
+      </div>
+
+      <div className="flex justify-center mt-10">
+        <h1 className="text-2xl font-bold">...</h1>
+      </div>
+    </>
   );
 }
