@@ -53,14 +53,9 @@ export default function Navbar() {
       {/* DERECHA: Iconos */}
       <div className="flex items-center gap-6">
         <div className="flex gap-4 text-xl">
-          <Link href="/registro"><FaUser className="hover:text-pink-500" /></Link>
-          <Link href="/buscar"><FaSearch className="hover:text-pink-500" /></Link>
-          <Link href="/carrito"><FaShoppingBag className="hover:text-pink-500" /></Link>
-        </div>
-        <div className="hidden md:flex flex-col text-xs text-right">
-          <Link href="/registro" className="hover:underline">REGISTRARSE</Link>
-          <Link href="/buscar" className="hover:underline">BUSCAR</Link>
-          <Link href="/carrito" className="hover:underline">COMPRAR</Link>
+          <Link href="/registro"><FaUser className="text-black hover:text-pink-500" /></Link>
+          <Link href="/buscar"><FaSearch className="text-black hover:text-pink-500" /></Link>
+          <Link href="/carrito"><FaShoppingBag className="text-black hover:text-pink-500" /></Link>
         </div>
       </div>
     </nav>
