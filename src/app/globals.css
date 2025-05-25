@@ -24,3 +24,41 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.btn-animated {
+  appearance: none;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgb(var(--button-outline-color, 0, 0, 0));
+  border-radius: 0.375rem;
+  background-color: transparent;
+  color: rgb(var(--button-text-color, 255, 255, 255));
+
+  --button-background: 0, 0, 0;
+  --initial-gradient: linear-gradient(rgb(var(--button-background)), rgb(var(--button-background)));
+  --hover-gradient: linear-gradient(transparent, transparent);
+  --initial-background-position: 100% 0;
+  --hover-background-position: 0 0;
+
+  background-image: var(--initial-gradient), var(--hover-gradient);
+  background-size: 100% 100%, 0 100%;
+  background-position: var(--initial-background-position);
+  background-repeat: no-repeat;
+
+  padding: 0.65rem 1.75rem;
+  transition:
+    background-size 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    background-position 0.45s step-end,
+    color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1rem;
+}
+
+.btn-animated:hover {
+  background-size: 0 100%, 100% 100%;
+  background-position: var(--hover-background-position);
+  color: black;
+}

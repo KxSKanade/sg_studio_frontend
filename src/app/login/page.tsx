@@ -3,9 +3,9 @@ import Link from 'next/link';
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 pt-24">
-      <div className="w-full max-w-md bg-white shadow-lg p-8 rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-pink-500 mb-6">Iniciar Sesión</h2>
+    <main className="min-h-screen flex items-center justify-center bg-white pt-24">
+      <div className="w-full max-w-md bg-white shadow-lg p-8 rounded-lg border">
+        <h2 className="text-2xl text-center text-black mb-6" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>Iniciar sesión</h2>
 
         <form className="space-y-4">
           <div>
@@ -13,7 +13,7 @@ export default function LoginPage() {
             <input
               type="email"
               id="email"
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="correo@ejemplo.com"
               required
             />
@@ -24,7 +24,7 @@ export default function LoginPage() {
             <input
               type="password"
               id="password"
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="********"
               required
             />
@@ -32,7 +32,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition-colors"
+            className="btn-animated w-full"style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
           >
             Iniciar sesión
           </button>
@@ -40,11 +40,11 @@ export default function LoginPage() {
 
         <div className="mt-4 text-center text-sm text-gray-600">
           ¿No tienes cuenta?{' '}
-          <Link href="/registro" className="text-pink-500 hover:underline">Regístrate</Link>
+          <Link href="/registro" className="text-black hover:underline">Regístrate</Link>
         </div>
 
         <div className="mt-2 text-center text-sm">
-          <Link href="/recuperar" className="text-pink-400 hover:underline">¿Olvidaste tu contraseña?</Link>
+          <Link href="/recuperar" className="text-gray-600 hover:underline">¿Olvidaste tu contraseña?</Link>
         </div>
       </div>
     </main>
