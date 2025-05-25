@@ -1,24 +1,13 @@
 'use client';
 import Link from 'next/link';
 
-export default function RegistroPage() {
+export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 pt-24">
       <div className="w-full max-w-md bg-white shadow-lg p-8 rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-pink-500 mb-6">Crear cuenta</h2>
+        <h2 className="text-2xl font-bold text-center text-pink-500 mb-6">Iniciar Sesión</h2>
 
         <form className="space-y-4">
-          <div>
-            <label className="block text-sm text-gray-700 mb-1" htmlFor="name">Nombre</label>
-            <input
-              type="text"
-              id="name"
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-              placeholder="Tu nombre"
-              required
-            />
-          </div>
-
           <div>
             <label className="block text-sm text-gray-700 mb-1" htmlFor="email">Correo electrónico</label>
             <input
@@ -45,13 +34,17 @@ export default function RegistroPage() {
             type="submit"
             className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition-colors"
           >
-            Registrarse
+            Iniciar sesión
           </button>
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600">
-          ¿Ya tienes una cuenta?{' '}
-          <Link href="/login" className="text-pink-500 hover:underline">Inicia sesión</Link>
+          ¿No tienes cuenta?{' '}
+          <Link href="/registro" className="text-pink-500 hover:underline">Regístrate</Link>
+        </div>
+
+        <div className="mt-2 text-center text-sm">
+          <Link href="/recuperar" className="text-pink-400 hover:underline">¿Olvidaste tu contraseña?</Link>
         </div>
       </div>
     </main>

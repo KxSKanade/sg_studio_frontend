@@ -5,7 +5,7 @@ export default function Footer() {
     
     {/* Logo y título */}
     <div>
-      <img src="/images/logo_ciao.png" alt="CIAO BELLA" className="w-20 mb-2" />
+      <img src="/images/logo.png" alt="CIAO BELLA" className="w-20 mb-2" />
       <p className="font-semibold text-black">CIAO BELLA</p>
     </div>
 
