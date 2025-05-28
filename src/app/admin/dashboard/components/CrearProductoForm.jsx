@@ -1,14 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CrearProductoForm() {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState('');
   const [categoriaId, setCategoriaId] = useState('');
+  const [categorias, setCategorias] = useState([]);
   const [imagen, setImagen] = useState(null);
   const [mensaje, setMensaje] = useState('');
+
+  useEffect(() => {
+    // Cargar categorías al montar el componente
+    const fetchCategorias = async () => {
+      try {
+        const res = await fetch('https://sg-studio-backend.onrender.com/categorias');
+        const data = await res.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error('Error al cargar categorías:', error);
+      }
+    };
+    fetchCategorias();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,14 +111,20 @@ export default function CrearProductoForm() {
           className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
         />
 
-        <input
-          type="text"
+        {/* SELECT para elegir categoría */}
+        <select
           value={categoriaId}
           onChange={(e) => setCategoriaId(e.target.value)}
-          placeholder="Categoría ID *"
           required
-          className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
-        />
+          className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] text-[#A68461] focus:outline-none"
+        >
+          <option value="">Selecciona una categoría *</option>
+          {categorias.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.nombre}
+            </option>
+          ))}
+        </select>
 
         <input
           type="file"

@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CrearProductoForm from './components/CrearProductoForm';
 
+// Componente para listar productos
 function ListaProductos({ onEditarProducto }) {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [eliminando, setEliminando] = useState(null); // id de producto eliminándose
+  const [eliminando, setEliminando] = useState(null);
 
   useEffect(() => {
     async function fetchProductos() {
@@ -28,7 +29,6 @@ function ListaProductos({ onEditarProducto }) {
 
   const handleEliminar = async (id) => {
     if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
-
     setEliminando(id);
 
     try {
@@ -36,8 +36,6 @@ function ListaProductos({ onEditarProducto }) {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Error al eliminar producto');
-
-      // Actualizar lista local eliminando producto
       setProductos((prev) => prev.filter((producto) => producto.id !== id));
     } catch (error) {
       alert(error.message);
@@ -46,26 +44,16 @@ function ListaProductos({ onEditarProducto }) {
     }
   };
 
-  if (loading) {
-    return <p className="text-center text-lg">Cargando productos...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-600">{error}</p>;
-  }
+  if (loading) return <p className="text-center text-lg">Cargando productos...</p>;
+  if (error) return <p className="text-center text-red-600">{error}</p>;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {productos.map(({ id, imagen, nombre, precio }) => (
         <div key={id} className="bg-white p-4 rounded shadow text-center relative">
-          <img
-            src={imagen}
-            alt={nombre}
-            className="w-full h-48 object-cover rounded mb-2"
-          />
+          <img src={imagen} alt={nombre} className="w-full h-48 object-cover rounded mb-2" />
           <p className="text-gray-800 font-semibold">{nombre}</p>
           <p className="text-black">${precio}</p>
-
           <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={() => onEditarProducto({ id, imagen, nombre, precio })}
@@ -87,16 +75,79 @@ function ListaProductos({ onEditarProducto }) {
   );
 }
 
+// Componente para listar categorías
+function ListaCategorias() {
+  const [categorias, setCategorias] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [eliminando, setEliminando] = useState(null);
+
+  useEffect(() => {
+    async function fetchCategorias() {
+      try {
+        const res = await fetch('https://sg-studio-backend.onrender.com/categorias');
+        if (!res.ok) throw new Error('Error al obtener categorías');
+        const data = await res.json();
+        setCategorias(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCategorias();
+  }, []);
+
+  const handleEliminar = async (id) => {
+    if (!confirm('¿Seguro que quieres eliminar esta categoría?')) return;
+    setEliminando(id);
+
+    try {
+      const res = await fetch(`https://sg-studio-backend.onrender.com/categorias/${id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Error al eliminar categoría');
+      setCategorias((prev) => prev.filter((cat) => cat.id !== id));
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setEliminando(null);
+    }
+  };
+
+  if (loading) return <p className="text-center text-lg">Cargando categorías...</p>;
+  if (error) return <p className="text-center text-red-600">{error}</p>;
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {categorias.map(({ id, nombre }) => (
+        <div key={id} className="bg-white p-4 rounded shadow text-center relative">
+          <p className="text-gray-800 font-semibold text-lg">{nombre}</p>
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => handleEliminar(id)}
+              disabled={eliminando === id}
+              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50"
+            >
+              {eliminando === id ? 'Eliminando...' : 'Eliminar'}
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Componente principal
 export default function AdminDashboard() {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
-  const [showConfig, setShowConfig] = useState(false);
-  const [productoEditar, setProductoEditar] = useState(null); // producto en edición
+  const [showProductos, setShowProductos] = useState(true);
+  const [productoEditar, setProductoEditar] = useState(null);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const role = localStorage.getItem('role');
-
     if (!isLoggedIn || role !== 'admin') {
       router.push('/login');
     } else {
@@ -110,20 +161,13 @@ export default function AdminDashboard() {
     router.push('/login');
   };
 
-  const handleShowConfig = () => {
-    setShowConfig((prev) => !prev);
-    setProductoEditar(null); // limpiar edición al cambiar vista
-  };
-
   const handleEditarProducto = (producto) => {
     setProductoEditar(producto);
-    setShowConfig(true);
+    setShowProductos(true);
   };
 
   const handleFormularioGuardado = () => {
-    // al guardar (crear o editar), cerrar formulario y recargar lista de productos
     setProductoEditar(null);
-    setShowConfig(true);
   };
 
   if (!authorized) return null;
@@ -146,18 +190,21 @@ export default function AdminDashboard() {
           minHeight: '100vh',
         }}
       >
-        <h1
-          className="text-2xl font-bold mb-8"
-          style={{ fontFamily: "'Beige Culture', serif" }}
-        >
+        <h1 className="text-2xl font-bold mb-8" style={{ fontFamily: "'Beige Culture', serif" }}>
           Admin Panel
         </h1>
         <nav className="flex flex-col gap-6 text-lg">
           <button
-            onClick={handleShowConfig}
+            onClick={() => setShowProductos(true)}
             className="hover:text-black transition"
           >
             Productos
+          </button>
+          <button
+            onClick={() => setShowProductos(false)}
+            className="hover:text-black transition"
+          >
+            Categorías
           </button>
         </nav>
         <button
@@ -179,7 +226,7 @@ export default function AdminDashboard() {
           </h2>
         </section>
 
-        {showConfig && (
+        {showProductos ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-2xl font-bold mb-4">
@@ -195,6 +242,11 @@ export default function AdminDashboard() {
               <h3 className="text-2xl font-bold mb-4">Lista de productos</h3>
               <ListaProductos onEditarProducto={handleEditarProducto} />
             </div>
+          </div>
+        ) : (
+          <div>
+            <h3 className="text-2xl font-bold mb-4">Lista de categorías</h3>
+            <ListaCategorias />
           </div>
         )}
       </main>
