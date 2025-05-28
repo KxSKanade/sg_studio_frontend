@@ -4,7 +4,7 @@ import { FaUser, FaSearch, FaShoppingBag } from 'react-icons/fa';
 
 export default function Navbar() {
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 px-8 py-4 bg-white text-black border-b shadow-md">
+    <nav className="fixed top-0 left-0 w-full z-50 px-8 py-4 bg-white text-black shadow-md">
       <div className="flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity">

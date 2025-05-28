@@ -39,8 +39,9 @@ export default function Navbar() {
   }, [showSearch]);
 
   const bgClass = scrolled || hovered || showSearch
-    ? 'bg-white text-black shadow-md border-b'
-    : 'bg-transparent text-white';
+    ? 'bg-white text-black shadow-md border-b border-gray-300'
+    : 'bg-transparent text-white border-b border-transparent';
+
 
   const clearSearch = () => setSearchTerm('');
 
