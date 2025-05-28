@@ -1,8 +1,11 @@
+//admin/dashboard/page
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CrearProductoForm from './components/CrearProductoForm';
+import CrearCategoriaForm from './components/CrearCategoriaForm';
 
 // Componente para listar productos
 function ListaProductos({ onEditarProducto }) {
@@ -206,6 +209,7 @@ export default function AdminDashboard() {
           >
             Categorías
           </button>
+          
         </nav>
         <button
           onClick={handleLogout}
@@ -247,6 +251,8 @@ export default function AdminDashboard() {
           <div>
             <h3 className="text-2xl font-bold mb-4">Lista de categorías</h3>
             <ListaCategorias />
+            <CrearCategoriaForm />
+
           </div>
         )}
       </main>
