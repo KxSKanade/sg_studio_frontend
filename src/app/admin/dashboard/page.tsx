@@ -52,11 +52,12 @@ function ListaProductos({ onEditarProducto }) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {productos.map(({ id, imagen, nombre, precio }) => (
+      {productos.map(({ id, imagen, nombre, precio,descripcion }) => (
         <div key={id} className="bg-white p-4 rounded shadow text-center relative">
           <img src={imagen} alt={nombre} className="w-full h-48 object-cover rounded mb-2" />
           <p className="text-gray-800 font-semibold">{nombre}</p>
           <p className="text-black">${precio}</p>
+          <p className="text-black">${descripcion}</p>
           <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={() => onEditarProducto({ id, imagen, nombre, precio })}
@@ -123,9 +124,11 @@ function ListaCategorias() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {categorias.map(({ id, nombre }) => (
+      {categorias.map(({ id, nombre,descripcion }) => (
         <div key={id} className="bg-white p-4 rounded shadow text-center relative">
           <p className="text-gray-800 font-semibold text-lg">{nombre}</p>
+          <p className="text-black">{descripcion}</p>
+
           <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={() => handleEliminar(id)}

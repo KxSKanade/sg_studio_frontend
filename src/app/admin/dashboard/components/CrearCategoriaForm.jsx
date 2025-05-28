@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export default function CrearCategoriaForm() {
   const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
   const [mensaje, setMensaje] = useState('');
 
   const handleSubmit = async (e) => {
@@ -20,7 +21,8 @@ export default function CrearCategoriaForm() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ nombre })
+        body: JSON.stringify({ nombre,descripcion })
+
       });
 
       const data = await res.json();
@@ -31,7 +33,9 @@ export default function CrearCategoriaForm() {
       }
 
       setMensaje(`Categoría "${data.nombre}" creada con éxito`);
+      setMensaje(`Categoría "${data.descripcion}" creada con éxito`);
       setNombre('');
+      setDescripcion('');
     } catch (error) {
       console.error(error);
       setMensaje('Error al conectar con el servidor');
@@ -63,6 +67,13 @@ export default function CrearCategoriaForm() {
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           placeholder="Nombre de la categoría *"
+          className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+        />
+        <input
+          type="text"
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+          placeholder="Descripcion de la categoria*"
           className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
         />
 

@@ -73,7 +73,7 @@ export default function Home() {
         <p className="text-gray-700 mb-8 text-lg">Primera vista</p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {productos.map(({ id, imagen, nombre, precio }) => (
+          {productos.map(({ id, imagen, nombre, precio,descripcion }) => (
             <div key={id} className="text-center">
               {/* Si imagen es externa, puedes usar img o next/image con loader personalizado */}
               <img
@@ -84,6 +84,8 @@ export default function Home() {
 
               <p className="mt-2 text-gray-600 text-sm">{nombre}</p>
               <p className="font-semibold text-sm text-black">${precio}</p>
+              <p className="font-semibold text-sm text-black">${descripcion}</p>
+
             </div>
           ))}
         </div>
