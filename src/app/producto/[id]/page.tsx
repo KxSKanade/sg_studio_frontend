@@ -1,23 +1,42 @@
 'use client';
+
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export default function ProductoDetallePage() {
-  const { id } = useParams();
-  const producto = {
-    id,
-    nombre: 'Top Blanco',
-    precio: 49.90,
-    descripcion: 'Top blanco elegante para uso casual o formal.',
-    cuidados: 'Lavar a mano, no usar secadora.',
-    img: '/images/top1.jpg',
-  };
+  const params = useParams();
+  const id = params?.id as string;
+  const [producto, setProducto] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducto = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productos/${id}`);
+        if (!res.ok) throw new Error('No se pudo obtener el producto');
+        const data = await res.json();
+        setProducto(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProducto();
+    }
+  }, [id]);
+
+  if (loading) return <div className="p-6 text-center">Cargando producto...</div>;
+  if (!producto) return <div className="p-6 text-center text-red-500">Producto no encontrado</div>;
 
   return (
     <div className="p-6 grid md:grid-cols-2 gap-10">
       <div className="w-full h-[500px] relative">
         <Image
-          src={producto.img}
+          src={producto.img || '/images/default.jpg'}
           alt={producto.nombre}
           fill
           className="object-cover rounded-lg"
@@ -31,20 +50,6 @@ export default function ProductoDetallePage() {
         <button className="mt-6 bg-black text-white px-6 py-2 rounded hover:bg-pink-600">
           Añadir al carrito
         </button>
-        <div className="mt-10">
-  <h2 className="text-xl font-semibold mb-2">Combina con:</h2>
-  <div className="grid grid-cols-2 gap-4">
-    {/* Esto sería un map de productos relacionados */}
-    <div className="border p-2">
-      <img src="/images/falda1.jpg" alt="Falda" className="w-full h-40 object-cover" />
-      <p>Falda Denim</p>
-    </div>
-    <div className="border p-2">
-      <img src="/images/blazer1.jpg" alt="Blazer" className="w-full h-40 object-cover" />
-      <p>Blazer Blanco</p>
-    </div>
-  </div>
-</div>
       </div>
     </div>
   );
