@@ -35,6 +35,7 @@ function Slideshow({ slides, interval = 5000 }) {
 
 export default function Home() {
   const [productos, setProductos] = useState([])
+  const [carrito, setCarrito] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -54,6 +55,19 @@ export default function Home() {
     fetchProductos()
   }, [])
 
+  const agregarAlCarrito = (producto) => {
+    setCarrito((prev) => {
+      const existe = prev.find((item) => item.id === producto.id)
+      if (existe) {
+        return prev.map((item) =>
+          item.id === producto.id ? { ...item, cantidad: item.cantidad + 1 } : item
+        )
+      } else {
+        return [...prev, { ...producto, cantidad: 1 }]
+      }
+    })
+  }
+
   if (loading) {
     return <p className="p-12 text-center text-lg">Cargando productos...</p>
   }
@@ -70,22 +84,46 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-2">
           SECCIÓN: <span className="text-blue-900">ROPA</span>
         </h2>
-        <p className="text-gray-700 mb-8 text-lg">Primera vista</p>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {productos.map(({ id, imagen, nombre, precio,descripcion }) => (
-            <div key={id} className="text-center">
-              {/* Si imagen es externa, puedes usar img o next/image con loader personalizado */}
-              <img
-                src={imagen}
-                alt={nombre}
-                className="w-full h-auto rounded shadow"
-              />
-
+          {productos.map(({ id, imagen, imagenHover, nombre, precio, descripcion }) => (
+            <div key={id} className="text-center group relative">
+              <div className="relative overflow-hidden rounded shadow">
+                <img
+                  src={imagen}
+                  alt={nombre}
+                  srcSet={`
+                    ${imagen}?w=200 200w,
+                    ${imagen}?w=400 400w,
+                    ${imagen}?w=800 800w,
+                    ${imagen}?w=1200 1200w
+                  `}
+                  sizes="(max-width: 699px) 74vw, (max-width: 999px) 38vw, calc((100vw - 96px) / 4 - (24px / 4 * 3))"
+                  width={400}
+                  height={600}
+                  className="w-full h-auto transition-opacity duration-300 group-hover:opacity-0"
+                  loading="lazy"
+                  fetchpriority="low"
+                />
+                <img
+                  src={imagenHover}
+                  alt={`${nombre} alternativa`}
+                  className="absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  loading="lazy"
+                  fetchpriority="low"
+                />
+                <button
+                  onClick={() => agregarAlCarrito({ id, nombre, precio })}
+                  className="absolute bottom-2 right-2 bg-white rounded-full p-2 text-black hover:bg-gray-100 shadow transition"
+                  aria-label="Agregar al carrito"
+                >
+                  <svg aria-hidden="true" focusable="false" fill="none" width="16" height="16" className="icon icon-plus" viewBox="0 0 12 12">
+                    <path d="M6 0v12M0 6h12" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
+                </button>
+              </div>
               <p className="mt-2 text-gray-600 text-sm">{nombre}</p>
               <p className="font-semibold text-sm text-black">${precio}</p>
-              <p className="font-semibold text-sm text-black">${descripcion}</p>
-
+              <p className="font-semibold text-sm text-black">{descripcion}</p>
             </div>
           ))}
         </div>
