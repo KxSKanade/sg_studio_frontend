@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CrearProductoForm from './components/CrearProductoForm';
 import CrearCategoriaForm from './components/CrearCategoriaForm';
+import EditarProductoForm from './components/EditarProductoForm';
+
 
 // Componente para listar productos
 function ListaProductos({ onEditarProducto }) {
@@ -56,8 +58,8 @@ function ListaProductos({ onEditarProducto }) {
         <div key={id} className="bg-white p-4 rounded shadow text-center relative">
           <img src={imagen} alt={nombre} className="w-full h-48 object-cover rounded mb-2" />
           <p className="text-gray-800 font-semibold">{nombre}</p>
-          <p className="text-black">${precio}</p>
-          <p className="text-black">${descripcion}</p>
+          <p className="text-black">{precio}</p>
+          <p className="text-black">{descripcion}</p>
           <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={() => onEditarProducto({ id, imagen, nombre, precio })}
@@ -239,11 +241,16 @@ export default function AdminDashboard() {
               <h3 className="text-2xl font-bold mb-4">
                 {productoEditar ? 'Editar producto' : 'Formulario de producto'}
               </h3>
-              <CrearProductoForm
-                producto={productoEditar}
-                onGuardado={handleFormularioGuardado}
-                onCancelar={() => setProductoEditar(null)}
-              />
+              {productoEditar ? (
+                  <EditarProductoForm
+                    producto={productoEditar}
+                    onGuardado={handleFormularioGuardado}
+                    onCancelar={() => setProductoEditar(null)}
+                  />
+                ) : (
+                  <CrearProductoForm onGuardado={handleFormularioGuardado} />
+                )}
+
             </div>
             <div>
               <h3 className="text-2xl font-bold mb-4">Lista de productos</h3>
