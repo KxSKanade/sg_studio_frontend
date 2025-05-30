@@ -1,3 +1,4 @@
+//admin/dashboard/components/EditarProductoForm
 'use client';
 
 import { useState, useEffect } from 'react';

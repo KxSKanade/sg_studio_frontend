@@ -1,5 +1,3 @@
-//admin/dashboard/page
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -7,81 +5,9 @@ import { useRouter } from 'next/navigation';
 import CrearProductoForm from './components/CrearProductoForm';
 import CrearCategoriaForm from './components/CrearCategoriaForm';
 import EditarProductoForm from './components/EditarProductoForm';
+import ListarProductosAdmin from './components/ListarProductosAdmin';
+import { Package, Tags, LogOut, LayoutList,ShoppingCart ,Layers3,PlusCircle} from 'lucide-react';
 
-
-// Componente para listar productos
-function ListaProductos({ onEditarProducto }) {
-  const [productos, setProductos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [eliminando, setEliminando] = useState(null);
-
-  useEffect(() => {
-    async function fetchProductos() {
-      try {
-        const res = await fetch('https://sg-studio-backend.onrender.com/productos');
-        if (!res.ok) throw new Error('Error al obtener productos');
-        const data = await res.json();
-        setProductos(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProductos();
-  }, []);
-
-  const handleEliminar = async (id) => {
-    if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
-    setEliminando(id);
-
-    try {
-      const res = await fetch(`https://sg-studio-backend.onrender.com/productos/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Error al eliminar producto');
-      setProductos((prev) => prev.filter((producto) => producto.id !== id));
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setEliminando(null);
-    }
-  };
-
-  if (loading) return <p className="text-center text-lg">Cargando productos...</p>;
-  if (error) return <p className="text-center text-red-600">{error}</p>;
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {productos.map(({ id, imagen, nombre, precio,descripcion }) => (
-        <div key={id} className="bg-white p-4 rounded shadow text-center relative">
-          <img src={imagen} alt={nombre} className="w-full h-48 object-cover rounded mb-2" />
-          <p className="text-gray-800 font-semibold">{nombre}</p>
-          <p className="text-black">{precio}</p>
-          <p className="text-black">{descripcion}</p>
-          <div className="flex justify-center gap-4 mt-4">
-            <button
-              onClick={() => onEditarProducto({ id, imagen, nombre, precio })}
-              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-            >
-              Editar
-            </button>
-            <button
-              onClick={() => handleEliminar(id)}
-              disabled={eliminando === id}
-              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50"
-            >
-              {eliminando === id ? 'Eliminando...' : 'Eliminar'}
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// Componente para listar categorías
 function ListaCategorias() {
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -126,11 +52,10 @@ function ListaCategorias() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {categorias.map(({ id, nombre,descripcion }) => (
-        <div key={id} className="bg-white p-4 rounded shadow text-center relative">
-          <p className="text-gray-800 font-semibold text-lg">{nombre}</p>
-          <p className="text-black">{descripcion}</p>
-
+      {categorias.map(({ id, nombre, descripcion }) => (
+        <div key={id} className="bg-white p-4 rounded shadow text-center relative border border-gray-200 hover:shadow-lg transition">
+          <p className="text-gray-800 font-semibold text-xl">{nombre}</p>
+          <p className="text-gray-600 mt-1">{descripcion}</p>
           <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={() => handleEliminar(id)}
@@ -146,12 +71,30 @@ function ListaCategorias() {
   );
 }
 
-// Componente principal
 export default function AdminDashboard() {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
   const [showProductos, setShowProductos] = useState(true);
   const [productoEditar, setProductoEditar] = useState(null);
+  const [soloListaProductos, setSoloListaProductos] = useState(false);
+  const [cantidadProductos, setCantidadProductos] = useState(0);
+  const [cantidadCategorias, setCantidadCategorias] = useState(0);
+  const [mostrarCrearProducto, setMostrarCrearProducto] = useState(false);
+
+
+  useEffect(() => {
+    // Obtener productos
+    fetch('https://sg-studio-backend.onrender.com/productos')
+      .then(res => res.json())
+      .then(data => setCantidadProductos(data.length))
+      .catch(err => console.error('Error al obtener productos:', err));
+
+    // Obtener categorías
+    fetch('https://sg-studio-backend.onrender.com/categorias')
+      .then(res => res.json())
+      .then(data => setCantidadCategorias(data.length))
+      .catch(err => console.error('Error al obtener categorías:', err));
+  }, []);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -181,67 +124,91 @@ export default function AdminDashboard() {
   if (!authorized) return null;
 
   return (
-    <div
-      className="min-h-screen flex"
-      style={{
-        backgroundColor: '#F7F1EC',
-        fontFamily: "'Adelle Sans Devanagari', sans-serif",
-        color: '#A68461',
-      }}
-    >
+    <div className="min-h-screen flex bg-[#F7F1EC] text-[#A68461] font-sans">
       {/* Sidebar */}
-      <aside
-        className="w-64 p-6 flex flex-col justify-between"
-        style={{
-          backgroundColor: '#A68461',
-          color: '#F7F1EC',
-          minHeight: '100vh',
-        }}
-      >
-        <h1 className="text-2xl font-bold mb-8" style={{ fontFamily: "'Beige Culture', serif" }}>
-          Admin Panel
-        </h1>
-        <nav className="flex flex-col gap-6 text-lg">
-          <button
-            onClick={() => setShowProductos(true)}
-            className="hover:text-black transition"
-          >
-            Productos
-          </button>
-          <button
-            onClick={() => setShowProductos(false)}
-            className="hover:text-black transition"
-          >
-            Categorías
-          </button>
-          
-        </nav>
+      <aside className="w-64 p-6 flex flex-col justify-between bg-[#A68461] text-[#F7F1EC] shadow-md">
+        <div>
+          <h1 className="text-3xl font-extrabold mb-10 text-center font-serif tracking-wide">
+            Admin Panel
+          </h1>
+          <nav className="flex flex-col gap-6 text-lg">
+            <button
+              onClick={() => {
+                setShowProductos(true);
+                setSoloListaProductos(false);
+              }}
+              className="flex items-center gap-2 hover:text-black transition"
+            >
+              <Package className="w-5 h-5" /> Productos
+            </button>
+            <button
+              onClick={() => setShowProductos(false)}
+              className="flex items-center gap-2 hover:text-black transition"
+            >
+              <Tags className="w-5 h-5" /> Categorías
+            </button>
+            <button
+              onClick={() => {
+                setShowProductos(true);
+                setSoloListaProductos(true);
+              }}
+              className="flex items-center gap-2 hover:text-black transition"
+            >
+              <LayoutList className="w-5 h-5" /> Ver solo productos
+            </button>
+          </nav>
+        </div>
+
         <button
           onClick={handleLogout}
-          className="mt-10 px-4 py-2 rounded bg-black text-white font-semibold hover:bg-gray-800 transition"
+          className="mt-10 px-4 py-2 rounded bg-black text-white font-semibold hover:bg-gray-800 transition flex items-center justify-center gap-2"
         >
-          Cerrar sesión
+          <LogOut className="w-4 h-4" /> Cerrar sesión
         </button>
       </aside>
 
       {/* Main Content */}
       <main className="flex-grow p-10 max-w-6xl mx-auto">
-        <section className="mb-10">
-          <h2
-            className="text-4xl font-extrabold mb-4"
-            style={{ fontFamily: "'Beige Culture', serif" }}
-          >
+       <section className="mb-10 bg-[#f5f1e9] p-8 rounded-2xl shadow-lg max-w-7xl mx-auto">
+          <h2 className="text-4xl font-extrabold mb-6 font-serif text-[#A68461] animate-fade-in">
             ¡Bienvenido, Administrador!
           </h2>
+          <p className="text-[#7d6752] mb-8 text-lg max-w-xl">
+            Aquí puedes gestionar todos los productos y  categorías  de tu tienda.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {/* Productos */}
+            <div className="bg-white rounded-xl p-6 flex items-center shadow-md hover:shadow-lg transition">
+              <Package className="text-[#A68461] w-10 h-10 mr-5" />
+              <div>
+                <p className="text-sm text-gray-500">Productos</p>
+                <p className="text-2xl font-bold text-[#A68461]">{cantidadProductos}</p>
+              </div>
+            </div>
+
+            {/* Categorías */}
+            <div className="bg-white rounded-xl p-6 flex items-center shadow-md hover:shadow-lg transition">
+              <Layers3 className="text-[#A68461] w-10 h-10 mr-5" />
+              <div>
+                <p className="text-sm text-gray-500">Categorías</p>
+                <p className="text-2xl font-bold text-[#A68461]">{cantidadCategorias}</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {showProductos ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          soloListaProductos ? (
             <div>
-              <h3 className="text-2xl font-bold mb-4">
-                {productoEditar ? 'Editar producto' : 'Formulario de producto'}
-              </h3>
-              {productoEditar ? (
+              <h3 className="text-2xl font-bold mb-4">Lista de productos</h3>
+              <ListarProductosAdmin onEditarProducto={handleEditarProducto} />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+              
+                {productoEditar ? (
                   <EditarProductoForm
                     producto={productoEditar}
                     onGuardado={handleFormularioGuardado}
@@ -250,19 +217,17 @@ export default function AdminDashboard() {
                 ) : (
                   <CrearProductoForm onGuardado={handleFormularioGuardado} />
                 )}
-
+              </div>
             </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Lista de productos</h3>
-              <ListaProductos onEditarProducto={handleEditarProducto} />
-            </div>
-          </div>
+          )
         ) : (
           <div>
             <h3 className="text-2xl font-bold mb-4">Lista de categorías</h3>
             <ListaCategorias />
-            <CrearCategoriaForm />
-
+            <div className="mt-10">
+              <h4 className="text-xl font-semibold mb-2">Agregar nueva categoría</h4>
+              <CrearCategoriaForm />
+            </div>
           </div>
         )}
       </main>
