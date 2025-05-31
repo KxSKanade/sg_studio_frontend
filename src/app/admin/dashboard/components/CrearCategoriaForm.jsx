@@ -66,14 +66,14 @@ export default function CrearCategoriaForm() {
           type="text"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
-          placeholder="Nombre de la categoría *"
+          placeholder="Nombre de la categoría"
           className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
         />
         <input
           type="text"
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Descripcion de la categoria*"
+          placeholder="Descripcion de la categoria"
           className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
         />
 

@@ -62,7 +62,7 @@ export default function EditarProductoForm({ producto, onGuardado, onCancelar })
         />
       </div>
       <div>
-        <label className="block font-semibold">Precio</label>
+        <label className="block font-semibold">Precioasdas</label>
         <input
           type="number"
           name="precio"
