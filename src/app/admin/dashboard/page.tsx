@@ -249,14 +249,35 @@ export default function AdminDashboard() {
             </div>
           )
         ) : (
-          <div>
-            <h3 className="text-2xl font-bold mb-4">Lista de categorías</h3>
-            <ListaCategorias />
-            <div className="mt-10">
-              <h4 className="text-xl font-semibold mb-2">Agregar nueva categoría</h4>
-              <CrearCategoriaForm />
+        <div className="mt-10 flex flex-col lg:flex-row gap-6 items-start">
+          {/* Formulario para crear categoría */}
+          <div className="bg-white p-4 rounded-xl shadow border w-full lg:w-auto">
+            <div className="flex items-center gap-2 mb-4">
+              <PlusCircle className="text-primary w-5 h-5" />
+              <h2 className="text-lg font-semibold text-brown-700">Crear nueva categoría</h2>
+            </div>
+            <CrearCategoriaForm />
+          </div>
+
+          {/* Lista de categorías con scroll */}
+          <div className="bg-white p-0 rounded-xl shadow border flex-1 max-h-[400px] overflow-y-auto relative">
+            {/* Encabezado sticky con fondo sólido */}
+            <div className="sticky top-0 z-20 bg-white px-4 py-3 border-b border-gray-200">
+              <div className="flex items-center gap-2">
+                <Tags className="text-primary w-5 h-5" />
+                <h2 className="text-lg font-semibold text-brown-700">Lista de categorías</h2>
+              </div>
+            </div>
+
+            {/* Contenido desplazable */}
+            <div className="p-4">
+              <ListaCategorias />
             </div>
           </div>
+        </div>
+
+
+
         )}
       </main>
     </div>

@@ -108,7 +108,7 @@ export default function Home() {
                       height={600}
                       className="w-full h-auto transition-opacity duration-300 group-hover:opacity-0"
                       loading="lazy"
-                      fetchpriority="low"
+                      fetchPriority="low"
                     />
 
                     {imagenHover && (
@@ -117,8 +117,9 @@ export default function Home() {
                         alt={`${nombre} alternativa`}
                         className="absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         loading="lazy"
-                        fetchpriority="low"
+                        fetchPriority="low"
                       />
+
                     )}
 
                     <button
