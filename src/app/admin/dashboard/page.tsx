@@ -51,23 +51,28 @@ function ListaCategorias() {
   if (error) return <p className="text-center text-red-600">{error}</p>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-4">
       {categorias.map(({ id, nombre, descripcion }) => (
-        <div key={id} className="bg-white p-4 rounded shadow text-center relative border border-gray-200 hover:shadow-lg transition">
-          <p className="text-gray-800 font-semibold text-xl">{nombre}</p>
-          <p className="text-gray-600 mt-1">{descripcion}</p>
-          <div className="flex justify-center gap-4 mt-4">
-            <button
-              onClick={() => handleEliminar(id)}
-              disabled={eliminando === id}
-              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50"
-            >
-              {eliminando === id ? 'Eliminando...' : 'Eliminar'}
-            </button>
+        <div
+          key={id}
+          className="flex justify-between items-center p-4 bg-white border rounded-lg shadow-sm hover:shadow transition"
+        >
+          <div>
+            <h3 className="text-lg font-medium text-[#A68461]">{nombre}</h3>
+            <p className="text-gray-500 text-sm">{descripcion}</p>
           </div>
+          <button
+            onClick={() => handleEliminar(id)}
+            disabled={eliminando === id}
+            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50"
+          >
+            {eliminando === id ? 'Eliminando...' : 'Eliminar'}
+          </button>
         </div>
       ))}
     </div>
+
+
   );
 }
 
@@ -205,8 +210,8 @@ export default function AdminDashboard() {
               <ListarProductosAdmin onEditarProducto={handleEditarProducto} />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
+            <div className="flex justify-center">
+              <div >
               
                 {productoEditar ? (
                   <EditarProductoForm
@@ -215,8 +220,31 @@ export default function AdminDashboard() {
                     onCancelar={() => setProductoEditar(null)}
                   />
                 ) : (
-                  <CrearProductoForm onGuardado={handleFormularioGuardado} />
+                  <>
+                    {!mostrarCrearProducto ? (
+                      <button
+                        onClick={() => setMostrarCrearProducto(true)}
+                        className="mb-4 px-4 py-2 bg-[#A68461] text-white rounded hover:bg-[#8f6c4d] transition"
+                      >
+                        <PlusCircle className="inline w-4 h-4 mr-2" /> Crear nuevo producto
+                      </button>
+                    ) : (
+                      <div>
+                        <CrearProductoForm onGuardado={() => {
+                          setMostrarCrearProducto(false);
+                          handleFormularioGuardado();
+                        }} />
+                        <button
+                          onClick={() => setMostrarCrearProducto(false)}
+                          className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
+
               </div>
             </div>
           )
