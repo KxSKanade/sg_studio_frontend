@@ -77,10 +77,9 @@ export default function LoginPage() {
               required
             />
           </div>
-
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-all"
+            className="btn-animated w-full"
             style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
           >
             Iniciar sesión
@@ -92,11 +91,6 @@ export default function LoginPage() {
             {mensaje}
           </div>
         )}
-
-        <div className="mt-4 text-center text-sm text-gray-600">
-          ¿No tienes cuenta?{' '}
-          <Link href="/registro" className="text-black hover:underline">Regístrate</Link>
-        </div>
       </div>
     </main>
   );
