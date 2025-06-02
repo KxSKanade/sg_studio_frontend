@@ -141,6 +141,7 @@ export default function AdminDashboard() {
               onClick={() => {
                 setShowProductos(true);
                 setSoloListaProductos(false);
+
               }}
               className="flex items-center gap-2 hover:text-black transition"
             >
@@ -161,6 +162,18 @@ export default function AdminDashboard() {
             >
               <LayoutList className="w-5 h-5" /> Ver solo productos
             </button>
+            <button
+              onClick={() => {
+                setMostrarCrearProducto(true);   // ✅ Este es el correcto
+                setShowProductos(true);          // ✅ Para seguir en la vista de productos
+                setSoloListaProductos(false);    // ✅ Asegura que no se esté en "solo lista"
+              }}
+              className="flex items-center gap-2 hover:text-black transition"
+            >
+              <PlusCircle className="w-5 h-5" /> Crear producto
+            </button>
+
+
           </nav>
         </div>
 
@@ -275,9 +288,6 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-
-
-
         )}
       </main>
     </div>

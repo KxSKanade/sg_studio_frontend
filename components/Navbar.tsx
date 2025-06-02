@@ -3,12 +3,19 @@ import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import { FaUser, FaSearch, FaShoppingBag, FaTimes } from 'react-icons/fa';
 
+type Categoria = {
+  id: number;
+  nombre: string;
+  slug?: string;
+};
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showCart, setShowCart] = useState(false);
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
   const searchRef = useRef(null);
   const buttonRef = useRef(null);
   const cartRef = useRef(null);
@@ -17,6 +24,20 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await fetch('https://sg-studio-backend.onrender.com/categorias');
+        const data = await response.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error('Error al cargar las categorías:', error);
+      }
+    };
+
+    fetchCategorias();
   }, []);
 
   useEffect(() => {
@@ -75,16 +96,17 @@ export default function Navbar() {
               <Link href="/woman" className="underline-hover">WOMAN</Link>
               <div className="absolute left-0 top-full mt-0 w-64 bg-white shadow-lg p-4 hidden group-hover:block border text-sm z-30">
                 <ul className="space-y-1 text-black">
-                  <li><Link href="/ropa/tops">Tops</Link></li>
-                  <li><Link href="/ropa/polos">Polos</Link></li>
-                  <li><Link href="/ropa/blusas">Blusas</Link></li>
-                  <li><Link href="/ropa/bodies">Bodies</Link></li>
-                  <li><Link href="/ropa/vestidos">Vestidos</Link></li>
-                  <li><Link href="/ropa/abrigos">Abrigos, blazers</Link></li>
-                  <li><Link href="/ropa/pantalones">Pantalones</Link></li>
-                  <li><Link href="/ropa/denim">Denim</Link></li>
-                  <li><Link href="/ropa/faldas">Faldas</Link></li>
-                  <li><Link href="/ropa/shorts">Short</Link></li>
+                  {categorias.length > 0 ? (
+                    categorias.map((cat) => (
+                      <li key={cat.id}>
+                        <Link href={`/ropa/${cat.slug}`}>
+                          {cat.nombre}
+                        </Link>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-gray-500">Cargando...</li>
+                  )}
                 </ul>
               </div>
             </li>

@@ -98,12 +98,14 @@ export default function Home() {
                 key={id}
                 className="bg-white rounded-xl shadow-md overflow-hidden transition transform hover:scale-105 group"
               >
-                <div className="relative w-full h-120">
-                  <img
-                    src={imagenPrincipal}
-                    alt={nombre}
-                    className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
-                  />
+                <div className="relative w-full h-120 group">
+                <img
+                  src={imagenPrincipal}
+                  alt={nombre}
+                  className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ${
+                    imagenHover ? 'group-hover:opacity-0' : ''
+                  }`}
+                />
                   {imagenHover && (
                     <img
                       src={imagenHover}
