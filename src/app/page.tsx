@@ -55,18 +55,7 @@ export default function Home() {
     fetchProductos()
   }, [])
 
-  const agregarAlCarrito = (producto) => {
-    setCarrito((prev) => {
-      const existe = prev.find((item) => item.id === producto.id)
-      if (existe) {
-        return prev.map((item) =>
-          item.id === producto.id ? { ...item, cantidad: item.cantidad + 1 } : item
-        )
-      } else {
-        return [...prev, { ...producto, cantidad: 1 }]
-      }
-    })
-  }
+  const productoAleatorio = productos.length > 0 ? productos[Math.floor(Math.random() * productos.length)] : null
 
   if (loading) {
     return <p className="p-12 text-center text-lg">Cargando productos...</p>
@@ -106,27 +95,6 @@ export default function Home() {
                           className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
                       )}
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault()
-                          agregarAlCarrito({ id, nombre, precio })
-                        }}
-                        className="absolute bottom-2 right-2 bg-white rounded-full p-2 text-black hover:bg-gray-100 shadow transition"
-                        aria-label="Agregar al carrito"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          focusable="false"
-                          fill="none"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 12 12"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        >
-                          <path d="M6 0v12M0 6h12" />
-                        </svg>
-                      </button>
                     </div>
 
                     <div className="p-4 text-center">
@@ -151,6 +119,36 @@ export default function Home() {
           </span>
         </marquee>
       </div>
+      {productoAleatorio && (
+        <div className="bg-white text-black py-16">
+          <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center">
+            <div className="lg:w-1/3">
+              <img
+                src={productoAleatorio.imagen[0]}
+                alt={productoAleatorio.nombre}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="lg:w-2/3 text-center lg:text-left px-8">
+              <h3 className="uppercase tracking-wide text-gray-500 text-lg font-semibold">
+                Producto Destacado
+              </h3>
+              <h2 className="text-4xl font-bold text-black mt-4">
+                {productoAleatorio.nombre}
+              </h2>
+              <p className="text-gray-700 mt-4">{productoAleatorio.descripcion}</p>
+              <p className="text-black text-2xl font-bold mt-6">${productoAleatorio.precio}</p>
+              <Link
+                href={`/producto/${productoAleatorio.id}`}
+                className="btn-animated w-50 p-10"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                >
+                Ver Producto
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
