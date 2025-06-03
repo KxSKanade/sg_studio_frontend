@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
-import Zoom from 'react-medium-image-zoom'
-import 'react-medium-image-zoom/dist/styles.css'
 
 import {
   ShoppingCart,
@@ -23,6 +21,17 @@ export default function ProductoDetalle() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null)
+
+  // Estado para el zoom
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 })
+  const [isHovering, setIsHovering] = useState(false)
+
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
+    const x = ((e.pageX - left - window.scrollX) / width) * 100
+    const y = ((e.pageY - top - window.scrollY) / height) * 100
+    setZoomPosition({ x, y })
+  }
 
   useEffect(() => {
     async function fetchProducto() {
@@ -85,21 +94,26 @@ export default function ProductoDetalle() {
           ))}
         </div>
 
-        {/* ── Columna 2: Imagen principal con Zoom via react-medium-image-zoom ── */}
-        <div className="relative w-full h-[500px] shadow-md rounded-lg overflow-hidden flex items-center justify-center bg-gray-100">
+        {/* ── Columna 2: Imagen principal con efecto lupa ── */}
+        <div
+          className="relative w-full h-[500px] shadow-md rounded-lg overflow-hidden flex items-center justify-center bg-gray-100"
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
           {imagenSeleccionada && (
-            <Zoom
-              overlayBgColorEnd="rgba(255, 255, 255, 0.9)"
-              zoomMargin={40}
-            >
-              <Image
-                src={imagenSeleccionada}
-                alt="Imagen seleccionada"
-                fill
-                style={{ objectFit: 'contain' }}
-                className="cursor-zoom-in rounded-lg"
-              />
-            </Zoom>
+            <Image
+              src={imagenSeleccionada}
+              alt="Imagen seleccionada"
+              fill
+              style={{
+                objectFit: 'contain',
+                transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                transform: isHovering ? 'scale(2)' : 'scale(1)',
+                transition: 'transform 0.2s ease'
+              }}
+              className="rounded-lg pointer-events-none select-none"
+            />
           )}
         </div>
 
@@ -155,7 +169,7 @@ export default function ProductoDetalle() {
           )}
 
           <button
-          className="btn-animated w-full"
+            className="btn-animated w-full"
             style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
           >
             <ShoppingCart className="w-5 h-5" />
