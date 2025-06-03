@@ -47,6 +47,7 @@ body {
   color: var(--foreground);
   font-family: 'Montserrat', sans-serif;
 }
+
 .btn-animated {
   appearance: none;
   text-align: center;
@@ -85,3 +86,5 @@ body {
   background-position: var(--hover-background-position);
   color: black;
 }
+
+

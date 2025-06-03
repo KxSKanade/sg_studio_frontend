@@ -1,8 +1,7 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
-import Image from 'next/image'
+'use client';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 import {
   ShoppingCart,
@@ -12,48 +11,48 @@ import {
   Layers,
   Info,
   ShieldCheck,
-  Package
-} from 'lucide-react'
+  Package,
+} from 'lucide-react';
 
 export default function ProductoDetalle() {
-  const { id } = useParams()
-  const [producto, setProducto] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [imagenSeleccionada, setImagenSeleccionada] = useState(null)
+  const { id } = useParams();
+  const [producto, setProducto] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
 
   // Estado para el zoom
-  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 })
-  const [isHovering, setIsHovering] = useState(false)
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+  const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseMove = (e) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
-    const x = ((e.pageX - left - window.scrollX) / width) * 100
-    const y = ((e.pageY - top - window.scrollY) / height) * 100
-    setZoomPosition({ x, y })
-  }
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.pageX - left - window.scrollX) / width) * 100;
+    const y = ((e.pageY - top - window.scrollY) / height) * 100;
+    setZoomPosition({ x, y });
+  };
 
   useEffect(() => {
     async function fetchProducto() {
       try {
-        const res = await fetch(`https://sg-studio-backend.onrender.com/productos/${id}`)
-        if (!res.ok) throw new Error('Error al obtener el producto')
-        const data = await res.json()
-        setProducto(data)
-        setImagenSeleccionada(data.imagen?.[0])
+        const res = await fetch(`https://sg-studio-backend.onrender.com/productos/${id}`);
+        if (!res.ok) throw new Error('Error al obtener el producto');
+        const data = await res.json();
+        setProducto(data);
+        setImagenSeleccionada(data.imagen?.[0] || null);
       } catch (error) {
-        setError(error.message)
+        setError(error.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    if (id) fetchProducto()
-  }, [id])
+    if (id) fetchProducto();
+  }, [id]);
 
-  if (loading) return <p className="p-12 text-center">Cargando producto...</p>
-  if (error) return <p className="p-12 text-center text-red-600">{error}</p>
-  if (!producto) return <p className="p-12 text-center">Producto no encontrado</p>
+  if (loading) return <p className="p-12 text-center">Cargando producto...</p>;
+  if (error) return <p className="p-12 text-center text-red-600">{error}</p>;
+  if (!producto) return <p className="p-12 text-center">Producto no encontrado</p>;
 
   const {
     nombre,
@@ -66,8 +65,8 @@ export default function ProductoDetalle() {
     composicion,
     info,
     cuidados,
-    categoria
-  } = producto
+    categoria,
+  } = producto;
 
   return (
     <div className="bg-white min-h-screen px-6 md:px-12 pt-24 md:pt-32 pb-12">
@@ -97,6 +96,9 @@ export default function ProductoDetalle() {
         {/* ── Columna 2: Imagen principal con efecto lupa ── */}
         <div
           className="relative w-full h-[500px] shadow-md rounded-lg overflow-hidden flex items-center justify-center bg-gray-100"
+          style={{
+            cursor: isHovering ? 'zoom-in' : 'default',
+          }}
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
@@ -110,7 +112,7 @@ export default function ProductoDetalle() {
                 objectFit: 'contain',
                 transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
                 transform: isHovering ? 'scale(2)' : 'scale(1)',
-                transition: 'transform 0.2s ease'
+                transition: 'transform 0.2s ease',
               }}
               className="rounded-lg pointer-events-none select-none"
             />
@@ -178,5 +180,5 @@ export default function ProductoDetalle() {
         </div>
       </div>
     </div>
-  )
+  );
 }
