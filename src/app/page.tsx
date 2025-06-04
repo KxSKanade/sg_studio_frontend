@@ -115,8 +115,9 @@ export default function Home() {
       >
         <marquee behavior="scroll" direction="left" scrollamount="6" loop="0">
           <span className="mx-8 text-xl font-semibold">
-            TUS COMPRAS CON 3 Y 6 CUOTAS <strong className="text-2xl">SIN INTERESES</strong> ¡VÁLIDO CON TODAS LAS TARJETAS!
+            TUS COMPRAS CON 3 Y 6 CUOTAS <strong className="text-2xl">SIN INTERESES</strong> – Consulta al coordinar tu compra por <strong>WhatsApp</strong>.
           </span>
+
         </marquee>
       </div>
       {productoAleatorio && (
