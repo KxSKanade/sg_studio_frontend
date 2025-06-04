@@ -88,7 +88,7 @@ export default function Navbar() {
       >
         <div className="flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity">
-            CIAO BELLA
+            SG STUDIO
           </Link>
 
           <ul className="flex gap-6 text-sm font-medium">

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const slides = ['/images/7.png', '/images/8.png']
+const slides = ['/images/home2.jpg', '/images/home4.jpg']
 
 function Slideshow({ slides, interval = 5000 }) {
   const [current, setCurrent] = useState(0)
