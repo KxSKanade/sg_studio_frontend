@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const slides = ['/images/7.png', '/images/8.png']
+const slides = ['/images/home2.jpg', '/images/home4.jpg']
 
 function Slideshow({ slides, interval = 5000 }) {
   const [current, setCurrent] = useState(0)
@@ -115,8 +115,9 @@ export default function Home() {
       >
         <marquee behavior="scroll" direction="left" scrollamount="6" loop="0">
           <span className="mx-8 text-xl font-semibold">
-            TUS COMPRAS CON 3 Y 6 CUOTAS <strong className="text-2xl">SIN INTERESES</strong> ¡VÁLIDO CON TODAS LAS TARJETAS!
+            TUS COMPRAS CON 3 Y 6 CUOTAS <strong className="text-2xl">SIN INTERESES</strong> – Consulta al coordinar tu compra por <strong>WhatsApp</strong>.
           </span>
+
         </marquee>
       </div>
       {productoAleatorio && (
