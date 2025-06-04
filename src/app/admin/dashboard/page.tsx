@@ -6,7 +6,14 @@ import CrearProductoForm from './components/CrearProductoForm';
 import CrearCategoriaForm from './components/CrearCategoriaForm';
 import EditarProductoForm from './components/EditarProductoForm';
 import ListarProductosAdmin from './components/ListarProductosAdmin';
-import { Package, Tags, LogOut, LayoutList,ShoppingCart ,Layers3,PlusCircle} from 'lucide-react';
+import {
+  Package,
+  Tags,
+  LogOut,
+  LayoutList,
+  Layers3,
+  PlusCircle,
+} from 'lucide-react';
 
 function ListaCategorias() {
   const [categorias, setCategorias] = useState([]);
@@ -35,9 +42,10 @@ function ListaCategorias() {
     setEliminando(id);
 
     try {
-      const res = await fetch(`https://sg-studio-backend.onrender.com/categorias/${id}`, {
-        method: 'DELETE',
-      });
+      const res = await fetch(
+        `https://sg-studio-backend.onrender.com/categorias/${id}`,
+        { method: 'DELETE' }
+      );
       if (!res.ok) throw new Error('Error al eliminar categoría');
       setCategorias((prev) => prev.filter((cat) => cat.id !== id));
     } catch (error) {
@@ -47,32 +55,32 @@ function ListaCategorias() {
     }
   };
 
-  if (loading) return <p className="text-center text-lg">Cargando categorías...</p>;
-  if (error) return <p className="text-center text-red-600">{error}</p>;
+  if (loading)
+    return <p className="text-center text-lg text-gray-600">Cargando categorías...</p>;
+  if (error)
+    return <p className="text-center text-red-600">{error}</p>;
 
   return (
     <div className="space-y-4">
       {categorias.map(({ id, nombre, descripcion }) => (
         <div
           key={id}
-          className="flex justify-between items-center p-4 bg-white border rounded-lg shadow-sm hover:shadow transition"
+          className="flex justify-between items-center p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition"
         >
           <div>
-            <h3 className="text-lg font-medium text-[#A68461]">{nombre}</h3>
+            <h3 className="text-lg font-medium text-gray-800">{nombre}</h3>
             <p className="text-gray-500 text-sm">{descripcion}</p>
           </div>
           <button
             onClick={() => handleEliminar(id)}
             disabled={eliminando === id}
-            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50"
+            className="px-3 py-1 bg-gray-800 text-white rounded hover:bg-gray-700 transition disabled:opacity-50"
           >
             {eliminando === id ? 'Eliminando...' : 'Eliminar'}
           </button>
         </div>
       ))}
     </div>
-
-
   );
 }
 
@@ -86,19 +94,18 @@ export default function AdminDashboard() {
   const [cantidadCategorias, setCantidadCategorias] = useState(0);
   const [mostrarCrearProducto, setMostrarCrearProducto] = useState(false);
 
-
   useEffect(() => {
-    // Obtener productos
+    // Obtener cantidad de productos
     fetch('https://sg-studio-backend.onrender.com/productos')
-      .then(res => res.json())
-      .then(data => setCantidadProductos(data.length))
-      .catch(err => console.error('Error al obtener productos:', err));
+      .then((res) => res.json())
+      .then((data) => setCantidadProductos(data.length))
+      .catch((err) => console.error('Error al obtener productos:', err));
 
-    // Obtener categorías
+    // Obtener cantidad de categorías
     fetch('https://sg-studio-backend.onrender.com/categorias')
-      .then(res => res.json())
-      .then(data => setCantidadCategorias(data.length))
-      .catch(err => console.error('Error al obtener categorías:', err));
+      .then((res) => res.json())
+      .then((data) => setCantidadCategorias(data.length))
+      .catch((err) => console.error('Error al obtener categorías:', err));
   }, []);
 
   useEffect(() => {
@@ -120,97 +127,121 @@ export default function AdminDashboard() {
   const handleEditarProducto = (producto) => {
     setProductoEditar(producto);
     setShowProductos(true);
+    setSoloListaProductos(false);
+    setMostrarCrearProducto(false);
   };
 
   const handleFormularioGuardado = () => {
     setProductoEditar(null);
+    // opcional: recargar lista de productos si es necesario
+  };
+
+  // Función centralizada para mostrar el formulario de "Crear Producto"
+  const handleMostrarCrearProducto = () => {
+    setShowProductos(true);
+    setSoloListaProductos(false);
+    setProductoEditar(null);
+    setMostrarCrearProducto(true);
   };
 
   if (!authorized) return null;
 
   return (
-    <div className="min-h-screen flex bg-[#F7F1EC] text-[#A68461] font-sans">
-      {/* Sidebar */}
-      <aside className="w-64 p-6 flex flex-col justify-between bg-[#A68461] text-[#F7F1EC] shadow-md">
+    <div className="min-h-screen flex bg-gray-50 text-gray-900 font-sans">
+      {/* Sidebar (con hover mejorado) */}
+      <aside className="w-72 p-6 flex flex-col justify-between bg-white border-r border-gray-200 shadow-sm">
         <div>
-          <h1 className="text-3xl font-extrabold mb-10 text-center font-serif tracking-wide">
-            Admin Panel
+          <h1 className="text-3xl font-extrabold mb-8 text-gray-900 text-center tracking-tight">
+            Panel Admin
           </h1>
-          <nav className="flex flex-col gap-6 text-lg">
+          <nav className="flex flex-col gap-3 text-base">
             <button
               onClick={() => {
                 setShowProductos(true);
                 setSoloListaProductos(false);
-
+                setMostrarCrearProducto(false);
+                setProductoEditar(null);
               }}
-              className="flex items-center gap-2 hover:text-black transition"
+              className="flex items-center gap-2 py-2 px-3 rounded hover:bg-gray-100 transition"
             >
-              <Package className="w-5 h-5" /> Productos
+              <Package className="w-5 h-5 text-gray-700" />
+              <span className="text-gray-700">Productos</span>
             </button>
             <button
-              onClick={() => setShowProductos(false)}
-              className="flex items-center gap-2 hover:text-black transition"
+              onClick={() => {
+                setShowProductos(false);
+                setMostrarCrearProducto(false);
+                setProductoEditar(null);
+              }}
+              className="flex items-center gap-2 py-2 px-3 rounded hover:bg-gray-100 transition"
             >
-              <Tags className="w-5 h-5" /> Categorías
+              <Tags className="w-5 h-5 text-gray-700" />
+              <span className="text-gray-700">Categorías</span>
             </button>
             <button
               onClick={() => {
                 setShowProductos(true);
                 setSoloListaProductos(true);
+                setMostrarCrearProducto(false);
+                setProductoEditar(null);
               }}
-              className="flex items-center gap-2 hover:text-black transition"
+              className="flex items-center gap-2 py-2 px-3 rounded hover:bg-gray-100 transition"
             >
-              <LayoutList className="w-5 h-5" /> Ver solo productos
+              <LayoutList className="w-5 h-5 text-gray-700" />
+              <span className="text-gray-700">Ver Productos</span>
             </button>
+
+            {/* Este botón ahora llama a handleMostrarCrearProducto */}
             <button
-              onClick={() => {
-                setMostrarCrearProducto(true);   // ✅ Este es el correcto
-                setShowProductos(true);          // ✅ Para seguir en la vista de productos
-                setSoloListaProductos(false);    // ✅ Asegura que no se esté en "solo lista"
-              }}
-              className="flex items-center gap-2 hover:text-black transition"
+              onClick={handleMostrarCrearProducto}
+              className="flex items-center gap-2 py-2 px-3 rounded 
+                         hover:bg-gray-200 hover:scale-105 transition-transform transition-colors"
             >
-              <PlusCircle className="w-5 h-5" /> Crear producto
+              <PlusCircle className="w-5 h-5 text-gray-700" />
+              <span className="text-gray-700">Crear Producto</span>
             </button>
-
-
           </nav>
         </div>
 
         <button
           onClick={handleLogout}
-          className="mt-10 px-4 py-2 rounded bg-black text-white font-semibold hover:bg-gray-800 transition flex items-center justify-center gap-2"
+          className="mt-10 py-2 px-4 rounded bg-gray-800 hover:bg-gray-700 transition flex items-center justify-center gap-2 text-white"
         >
-          <LogOut className="w-4 h-4" /> Cerrar sesión
+          <LogOut className="w-4 h-4" />
+          <span>Cerrar sesión</span>
         </button>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-grow p-10 max-w-6xl mx-auto">
-       <section className="mb-10 bg-[#f5f1e9] p-8 rounded-2xl shadow-lg max-w-7xl mx-auto">
-          <h2 className="text-4xl font-extrabold mb-6 font-serif text-[#A68461] animate-fade-in">
+      <main className="flex-grow p-8 max-w-6xl mx-auto">
+        <section className="mb-8 p-6 bg-white rounded-xl shadow-md">
+          <h2 className="text-3xl font-extrabold mb-4 text-gray-900">
             ¡Bienvenido, Administrador!
           </h2>
-          <p className="text-[#7d6752] mb-8 text-lg max-w-xl">
-            Aquí puedes gestionar todos los productos y  categorías  de tu tienda.
+          <p className="text-gray-600 mb-6 text-base">
+            Aquí puedes gestionar todos los productos y categorías de tu tienda.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {/* Productos */}
-            <div className="bg-white rounded-xl p-6 flex items-center shadow-md hover:shadow-lg transition">
-              <Package className="text-[#A68461] w-10 h-10 mr-5" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Tarjeta Productos */}
+            <div className="bg-gray-100 rounded-lg p-5 flex items-center shadow-sm hover:shadow-md transition">
+              <Package className="text-gray-800 w-8 h-8 mr-4" />
               <div>
-                <p className="text-sm text-gray-500">Productos</p>
-                <p className="text-2xl font-bold text-[#A68461]">{cantidadProductos}</p>
+                <p className="text-sm text-gray-600">Productos</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {cantidadProductos}
+                </p>
               </div>
             </div>
 
-            {/* Categorías */}
-            <div className="bg-white rounded-xl p-6 flex items-center shadow-md hover:shadow-lg transition">
-              <Layers3 className="text-[#A68461] w-10 h-10 mr-5" />
+            {/* Tarjeta Categorías */}
+            <div className="bg-gray-100 rounded-lg p-5 flex items-center shadow-sm hover:shadow-md transition">
+              <Layers3 className="text-gray-800 w-8 h-8 mr-4" />
               <div>
-                <p className="text-sm text-gray-500">Categorías</p>
-                <p className="text-2xl font-bold text-[#A68461]">{cantidadCategorias}</p>
+                <p className="text-sm text-gray-600">Categorías</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {cantidadCategorias}
+                </p>
               </div>
             </div>
           </div>
@@ -219,75 +250,82 @@ export default function AdminDashboard() {
         {showProductos ? (
           soloListaProductos ? (
             <div>
-              <h3 className="text-2xl font-bold mb-4">Lista de productos</h3>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                Lista de Productos
+              </h3>
               <ListarProductosAdmin onEditarProducto={handleEditarProducto} />
             </div>
           ) : (
-            <div className="flex justify-center">
-              <div >
-              
-                {productoEditar ? (
-                  <EditarProductoForm
-                    producto={productoEditar}
-                    onGuardado={handleFormularioGuardado}
-                    onCancelar={() => setProductoEditar(null)}
-                  />
-                ) : (
-                  <>
-                    {!mostrarCrearProducto ? (
-                      <button
-                        onClick={() => setMostrarCrearProducto(true)}
-                        className="mb-4 px-4 py-2 bg-[#A68461] text-white rounded hover:bg-[#8f6c4d] transition"
-                      >
-                        <PlusCircle className="inline w-4 h-4 mr-2" /> Crear nuevo producto
-                      </button>
-                    ) : (
-                      <div>
-                        <CrearProductoForm onGuardado={() => {
+            <div>
+              {productoEditar ? (
+                <EditarProductoForm
+                  producto={productoEditar}
+                  onGuardado={handleFormularioGuardado}
+                  onCancelar={() => setProductoEditar(null)}
+                />
+              ) : (
+                <>
+                  {!mostrarCrearProducto ? (
+                    <button
+                      onClick={handleMostrarCrearProducto}
+                      className="mb-4 px-4 py-2 bg-gray-800 text-white rounded 
+                                 hover:bg-gray-200 hover:text-gray-900 hover:scale-105 
+                                 transition-transform transition-colors flex items-center gap-2"
+                    >
+                      <PlusCircle className="w-4 h-4" />
+                      <span>Crear nuevo producto</span>
+                    </button>
+                  ) : (
+                    <div className="space-y-2">
+                      <CrearProductoForm
+                        onGuardado={() => {
                           setMostrarCrearProducto(false);
                           handleFormularioGuardado();
-                        }} />
-                        <button
-                          onClick={() => setMostrarCrearProducto(false)}
-                          className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
-
-              </div>
+                        }}
+                      />
+                      <button
+                        onClick={() => setMostrarCrearProducto(false)}
+                        className="px-4 py-2 bg-gray-800 text-white rounded 
+                                   hover:bg-gray-700 transition"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           )
         ) : (
-        <div className="mt-10 flex flex-col lg:flex-row gap-6 items-start">
-          {/* Formulario para crear categoría */}
-          <div className="bg-white p-4 rounded-xl shadow border w-full lg:w-auto">
-            <div className="flex items-center gap-2 mb-4">
-              <PlusCircle className="text-primary w-5 h-5" />
-              <h2 className="text-lg font-semibold text-brown-700">Crear nueva categoría</h2>
+          <div className="mt-6 flex flex-col lg:flex-row gap-6">
+            {/* Formulario para crear categoría */}
+            <div className="bg-white p-6 rounded-xl shadow border border-gray-200 w-full lg:w-1/3">
+              <div className="flex items-center gap-2 mb-4">
+                <PlusCircle className="w-5 h-5 text-gray-800" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Crear nueva categoría
+                </h2>
+              </div>
+              <CrearCategoriaForm />
             </div>
-            <CrearCategoriaForm />
-          </div>
 
-          {/* Lista de categorías con scroll */}
-          <div className="bg-white p-0 rounded-xl shadow border flex-1 max-h-[400px] overflow-y-auto relative">
-            {/* Encabezado sticky con fondo sólido */}
-            <div className="sticky top-0 z-20 bg-white px-4 py-3 border-b border-gray-200">
-              <div className="flex items-center gap-2">
-                <Tags className="text-primary w-5 h-5" />
-                <h2 className="text-lg font-semibold text-brown-700">Lista de categorías</h2>
+            {/* Lista de categorías con scroll */}
+            <div className="bg-white rounded-xl shadow border border-gray-200 flex-1 max-h-[450px] overflow-y-auto">
+              {/* Encabezado sticky */}
+              <div className="sticky top-0 z-10 bg-white px-4 py-3 border-b border-gray-200">
+                <div className="flex items-center gap-2">
+                  <Tags className="w-5 h-5 text-gray-800" />
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Lista de Categorías
+                  </h2>
+                </div>
+              </div>
+              {/* Contenido */}
+              <div className="p-4">
+                <ListaCategorias />
               </div>
             </div>
-
-            {/* Contenido desplazable */}
-            <div className="p-4">
-              <ListaCategorias />
-            </div>
           </div>
-        </div>
         )}
       </main>
     </div>

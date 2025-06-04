@@ -1,8 +1,9 @@
+// admin/dashboard/components/CrearCategoriaForm.jsx
 'use client';
 
 import { useState } from 'react';
 
-export default function CrearCategoriaForm() {
+export default function CrearCategoriaForm({ onCategoriaCreada }) {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [mensaje, setMensaje] = useState('');
@@ -19,10 +20,9 @@ export default function CrearCategoriaForm() {
       const res = await fetch('https://sg-studio-backend.onrender.com/categorias', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nombre,descripcion })
-
+        body: JSON.stringify({ nombre, descripcion }),
       });
 
       const data = await res.json();
@@ -33,9 +33,13 @@ export default function CrearCategoriaForm() {
       }
 
       setMensaje(`Categoría "${data.nombre}" creada con éxito`);
-      setMensaje(`Categoría "${data.descripcion}" creada con éxito`);
       setNombre('');
       setDescripcion('');
+
+      // Si el padre pasó la función, la llamamos para que recargue la lista
+      if (typeof onCategoriaCreada === 'function') {
+        onCategoriaCreada(data);
+      }
     } catch (error) {
       console.error(error);
       setMensaje('Error al conectar con el servidor');
@@ -43,52 +47,35 @@ export default function CrearCategoriaForm() {
   };
 
   return (
-    <div
-      className="rounded-xl p-6 shadow-md mt-10 max-w-lg mx-auto"
-      style={{
-        backgroundColor: '#F1EDE2',
-        color: '#A68461',
-        fontFamily: "'Adelle Sans Devanagari', sans-serif"
-      }}
-    >
-      <h3
-        className="text-2xl font-bold mb-4"
-        style={{
-          fontFamily: "'Beige Culture', serif",
-          color: '#A68461'
-        }}
-      >
+    <div className="bg-white rounded-xl p-6 shadow-md w-full max-w-md mx-auto">
+      <h3 className="text-2xl font-semibold mb-4 text-gray-900">
         Crear Nueva Categoría
       </h3>
-
+ 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           placeholder="Nombre de la categoría"
-          className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+          className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
         />
         <input
           type="text"
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Descripcion de la categoria"
-          className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+          placeholder="Descripción de la categoría"
+          className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
         />
 
         <button
           type="submit"
-          className="w-full py-2 px-4 rounded-md shadow-md font-semibold transition"
-          style={{
-            backgroundColor: '#A68461',
-            color: '#F7F1EC'
-          }}
+          className="w-full py-2 px-4 bg-gray-800 text-white rounded-md shadow hover:bg-gray-700 transition"
         >
           Crear Categoría
         </button>
 
-        {mensaje && <p className="text-center mt-2 text-sm">{mensaje}</p>}
+        {mensaje && <p className="text-center mt-2 text-sm text-gray-700">{mensaje}</p>}
       </form>
     </div>
   );

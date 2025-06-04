@@ -10,12 +10,10 @@ export default function ListarProductosAdmin() {
 
   const [modalAbierto, setModalAbierto] = useState(false);
   const [productoEditando, setProductoEditando] = useState(null);
-  const [nuevaImagenes, setNuevaImagenes] = useState([]); 
-  const nuevaImagenesURLs = useRef([]); 
+  const [nuevaImagenes, setNuevaImagenes] = useState([]);
+  const nuevaImagenesURLs = useRef([]);
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
-
-
 
   useEffect(() => {
     async function fetchProductos() {
@@ -54,7 +52,7 @@ export default function ListarProductosAdmin() {
     setProductoEditando(producto);
 
     // Limpiar URLs de imágenes previas
-    nuevaImagenesURLs.current.forEach(url => URL.revokeObjectURL(url));
+    nuevaImagenesURLs.current.forEach((url) => URL.revokeObjectURL(url));
     nuevaImagenesURLs.current = [];
 
     setNuevaImagenes([]);
@@ -66,7 +64,7 @@ export default function ListarProductosAdmin() {
     setProductoEditando(null);
 
     // Liberar URLs creadas
-    nuevaImagenesURLs.current.forEach(url => URL.revokeObjectURL(url));
+    nuevaImagenesURLs.current.forEach((url) => URL.revokeObjectURL(url));
     nuevaImagenesURLs.current = [];
     setNuevaImagenes([]);
   };
@@ -80,11 +78,12 @@ export default function ListarProductosAdmin() {
     const files = Array.from(e.target.files).slice(0, 3); // máximo 3 archivos
 
     // Liberar URLs previas
-    nuevaImagenesURLs.current.forEach(url => URL.revokeObjectURL(url));
-    nuevaImagenesURLs.current = files.map(file => URL.createObjectURL(file));
+    nuevaImagenesURLs.current.forEach((url) => URL.revokeObjectURL(url));
+    nuevaImagenesURLs.current = files.map((file) => URL.createObjectURL(file));
 
     setNuevaImagenes(files);
   };
+
   const handleGuardar = async () => {
     try {
       let bodyData = { ...productoEditando };
@@ -116,174 +115,211 @@ export default function ListarProductosAdmin() {
     }
   };
 
-  if (loading) return <p className="text-center text-lg">Cargando productos...</p>;
+  if (loading)
+    return <p className="text-center text-lg text-gray-600">Cargando productos...</p>;
   if (error) return <p className="text-center text-red-600">{error}</p>;
 
   return (
     <>
-    
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {productos.map(({ id, imagen, nombre, precio, descripcion, color, talla, cantidad, composicion, info, cuidados, categoria }) => (
-          <div key={id} className="bg-white p-4 rounded shadow text-center relative">
-            <img
-              src={
-                Array.isArray(imagen) && imagen.length > 0
-                  ? imagen[0]
-                  : "/placeholder.jpg"
-              }
-              alt="Imagen producto"
-              className="w-full h-48 object-cover rounded mb-2"
-            />
-
-            <p className="text-gray-800 font-semibold">{nombre}</p>
-            <p className="text-black font-bold">${precio}</p>
-            <p className="text-black">{descripcion}</p>
-            {categoria?.nombre && <p className="text-gray-600">Categoría: {categoria.nombre}</p>}
-            {color && <p className="text-gray-600">Color: {color}</p>}
-            {talla && <p className="text-gray-600">Talla: {talla}</p>}
-            {cantidad !== undefined && <p className="text-gray-600">Cantidad: {cantidad}</p>}
-            {composicion && <p className="text-gray-600">Composición: {composicion}</p>}
-            {info && <p className="text-gray-600">Info: {info}</p>}
-            {cuidados && <p className="text-gray-600">Cuidados: {cuidados}</p>}
-
-            <div className="flex justify-center gap-4 mt-4">
-              <button
-                onClick={() => abrirModalEditar({ id, imagen, nombre, precio, descripcion, color, talla, cantidad, composicion, info, cuidados })}
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-              >
-                Editar
-              </button>
-              <button
-                onClick={() => handleEliminar(id)}
-                disabled={eliminando === id}
-                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-50"
-              >
-                {eliminando === id ? 'Eliminando...' : 'Eliminar'}
-              </button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {productos.map(
+          ({
+            id,
+            imagen,
+            nombre,
+            precio,
+            descripcion,
+            color,
+            talla,
+            cantidad,
+            composicion,
+            info,
+            cuidados,
+            categoria,
+          }) => (
+            <div
+              key={id}
+              className="bg-white rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-1 overflow-hidden"
+            >
+              <div className="w-full h-48 bg-gray-100">
+                <img
+                  src={Array.isArray(imagen) && imagen.length > 0 ? imagen[0] : '/placeholder.jpg'}
+                  alt="Imagen producto"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-left">
+                <h4 className="text-lg font-semibold text-gray-900 mb-1">{nombre}</h4>
+                <p className="text-gray-700 font-bold mb-2">${precio}</p>
+                {descripcion && (
+                  <p className="text-gray-600 text-sm mb-1 truncate">{descripcion}</p>
+                )}
+                <div className="text-gray-600 text-sm space-y-0.5 mb-3">
+                  {categoria?.nombre && <p>Categoría: {categoria.nombre}</p>}
+                  {color && <p>Color: {color}</p>}
+                  {talla && <p>Talla: {talla}</p>}
+                  {cantidad !== undefined && <p>Cantidad: {cantidad}</p>}
+                  {composicion && <p>Composición: {composicion}</p>}
+                  {info && <p>Info: {info}</p>}
+                  {cuidados && <p>Cuidados: {cuidados}</p>}
+                </div>
+                <div className="flex justify-between mt-4">
+                  <button
+                    onClick={() =>
+                      abrirModalEditar({
+                        id,
+                        imagen,
+                        nombre,
+                        precio,
+                        descripcion,
+                        color,
+                        talla,
+                        cantidad,
+                        composicion,
+                        info,
+                        cuidados,
+                      })
+                    }
+                    className="px-3 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition text-sm w-1/2 mr-1"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleEliminar(id)}
+                    disabled={eliminando === id}
+                    className="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition text-sm w-1/2 ml-1 disabled:opacity-50"
+                  >
+                    {eliminando === id ? 'Eliminando...' : 'Eliminar'}
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        )}
       </div>
 
-
       {modalAbierto && productoEditando && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded p-6 w-full max-w-lg max-h-[90vh] overflow-auto">
-            <h2 className="text-xl font-bold mb-4">Editar Producto</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-900">Editar Producto</h2>
 
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleGuardar();
               }}
+              className="space-y-4"
             >
-              <label className="block mb-2">
-                Nombre:
+              <label className="block">
+                <span className="text-gray-700">Nombre:</span>
                 <input
                   name="nombre"
                   value={productoEditando.nombre}
                   onChange={handleCambio}
-                  className="w-full border p-2 rounded"
+                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
                   required
                 />
               </label>
 
-              <label className="block mb-2">
-                Precio:
+              <label className="block">
+                <span className="text-gray-700">Precio:</span>
                 <input
                   type="number"
                   name="precio"
                   value={productoEditando.precio}
                   onChange={handleCambio}
-                  className="w-full border p-2 rounded"
+                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
                   step="0.01"
                   required
                 />
               </label>
 
-              <label className="block mb-2">
-                Descripción:
+              <label className="block">
+                <span className="text-gray-700">Descripción:</span>
                 <textarea
                   name="descripcion"
                   value={productoEditando.descripcion}
                   onChange={handleCambio}
-                  className="w-full border p-2 rounded"
+                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
                   rows={3}
                 />
               </label>
 
-              <label className="block mb-2">
-                Color:
-                <input
-                  name="color"
-                  value={productoEditando.color || ''}
-                  onChange={handleCambio}
-                  className="w-full border p-2 rounded"
-                />
-              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="block">
+                  <span className="text-gray-700">Color:</span>
+                  <input
+                    name="color"
+                    value={productoEditando.color || ''}
+                    onChange={handleCambio}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700">Talla:</span>
+                  <input
+                    name="talla"
+                    value={productoEditando.talla || ''}
+                    onChange={handleCambio}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  />
+                </label>
+              </div>
 
-              <label className="block mb-2">
-                Talla:
-                <input
-                  name="talla"
-                  value={productoEditando.talla || ''}
-                  onChange={handleCambio}
-                  className="w-full border p-2 rounded"
-                />
-              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="block">
+                  <span className="text-gray-700">Cantidad:</span>
+                  <input
+                    type="number"
+                    name="cantidad"
+                    value={productoEditando.cantidad || ''}
+                    onChange={handleCambio}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700">Composición:</span>
+                  <input
+                    name="composicion"
+                    value={productoEditando.composicion || ''}
+                    onChange={handleCambio}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  />
+                </label>
+              </div>
 
-              <label className="block mb-2">
-                Cantidad:
-                <input
-                  type="number"
-                  name="cantidad"
-                  value={productoEditando.cantidad || ''}
-                  onChange={handleCambio}
-                  className="w-full border p-2 rounded"
-                />
-              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="block">
+                  <span className="text-gray-700">Info:</span>
+                  <input
+                    name="info"
+                    value={productoEditando.info || ''}
+                    onChange={handleCambio}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-gray-700">Cuidados:</span>
+                  <input
+                    name="cuidados"
+                    value={productoEditando.cuidados || ''}
+                    onChange={handleCambio}
+                    className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                  />
+                </label>
+              </div>
 
-              <label className="block mb-2">
-                Composición:
-                <input
-                  name="composicion"
-                  value={productoEditando.composicion || ''}
-                  onChange={handleCambio}
-                  className="w-full border p-2 rounded"
-                />
-              </label>
-
-              <label className="block mb-2">
-                Info:
-                <input
-                  name="info"
-                  value={productoEditando.info || ''}
-                  onChange={handleCambio}
-                  className="w-full border p-2 rounded"
-                />
-              </label>
-
-              <label className="block mb-2">
-                Cuidados:
-                <input
-                  name="cuidados"
-                  value={productoEditando.cuidados || ''}
-                  onChange={handleCambio}
-                  className="w-full border p-2 rounded"
-                />
-              </label>
-           
               <div className="flex justify-end gap-3 mt-4">
                 <button
                   type="button"
                   onClick={cerrarModal}
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition"
                 >
                   Guardar
                 </button>

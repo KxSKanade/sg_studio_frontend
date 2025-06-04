@@ -1,5 +1,3 @@
-//admin/dashboard/components/CrearProductoForm
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -20,7 +18,6 @@ export default function CrearProductoForm() {
   const [info, setInfo] = useState('');
   const [cuidados, setCuidados] = useState('');
 
-
   useEffect(() => {
     // Cargar categorías al montar el componente
     const fetchCategorias = async () => {
@@ -38,7 +35,7 @@ export default function CrearProductoForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!nombre || !precio || !categoriaId ||!color ||!talla ||!cantidad ||!composicion ||!info ||!cuidados) {
+    if (!nombre || !precio || !categoriaId || !color || !talla || !cantidad || !composicion || !info || !cuidados) {
       setMensaje('Por favor, completa los campos requeridos');
       return;
     }
@@ -85,22 +82,10 @@ export default function CrearProductoForm() {
       console.error(error);
     }
   };
+
   return (
-    <div
-      className="rounded-xl p-8 shadow-md mt-12 max-w-4xl mx-auto"
-      style={{
-        backgroundColor: '#F1EDE2',
-        color: '#A68461',
-        fontFamily: "'Adelle Sans Devanagari', sans-serif"
-      }}
-    >
-      <h3
-        className="text-3xl font-bold mb-6 text-center"
-        style={{
-          fontFamily: "'Beige Culture', serif",
-          color: '#A68461'
-        }}
-      >
+    <div className="bg-white rounded-xl p-8 shadow-md mt-12 max-w-4xl mx-auto">
+      <h3 className="text-3xl font-semibold mb-6 text-center text-gray-900">
         Crear Nuevo Producto
       </h3>
 
@@ -113,7 +98,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setNombre(e.target.value)}
             placeholder="Nombre *"
             required
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           <textarea
@@ -121,7 +106,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setDescripcion(e.target.value)}
             placeholder="Descripción"
             rows={3}
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           <textarea
@@ -129,7 +114,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setComposicion(e.target.value)}
             placeholder="Composición"
             rows={2}
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           <textarea
@@ -137,7 +122,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setInfo(e.target.value)}
             placeholder="Información adicional"
             rows={2}
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
         </div>
 
@@ -149,7 +134,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setColor(e.target.value)}
             placeholder="Color *"
             required
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           <input
@@ -158,7 +143,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setCantidad(e.target.value)}
             placeholder="Cantidad *"
             required
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           <textarea
@@ -166,7 +151,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setCuidados(e.target.value)}
             placeholder="Cuidados"
             rows={2}
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           <textarea
@@ -174,7 +159,7 @@ export default function CrearProductoForm() {
             onChange={(e) => setTalla(e.target.value)}
             placeholder="Talla"
             rows={2}
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
         </div>
 
@@ -187,14 +172,14 @@ export default function CrearProductoForm() {
             onChange={(e) => setPrecio(e.target.value)}
             placeholder="Precio *"
             required
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] placeholder-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
 
           <select
             value={categoriaId}
             onChange={(e) => setCategoriaId(e.target.value)}
             required
-            className="w-full px-4 py-2 rounded-md border border-[#E2D6C6] bg-[#F7F1EC] text-[#A68461] focus:outline-none"
+            className="w-full px-4 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
           >
             <option value="">Selecciona una categoría *</option>
             {categorias.map((cat) => (
@@ -209,25 +194,19 @@ export default function CrearProductoForm() {
             accept="image/*"
             multiple
             onChange={(e) => setImagenes(Array.from(e.target.files))}
-            className="w-full text-sm text-[#A68461]"
+            className="w-full text-sm text-gray-700"
           />
-
 
           <button
             type="submit"
-            className="w-full py-2 px-4 rounded-md shadow-md font-semibold transition"
-            style={{
-              backgroundColor: '#A68461',
-              color: '#F7F1EC'
-            }}
+            className="w-full py-2 px-4 bg-gray-800 text-white rounded-md shadow hover:bg-gray-700 transition"
           >
             Crear Producto
           </button>
 
-          {mensaje && <p className="text-center mt-4 text-sm">{mensaje}</p>}
+          {mensaje && <p className="text-center mt-4 text-sm text-gray-700">{mensaje}</p>}
         </div>
       </form>
     </div>
   );
-
 }
