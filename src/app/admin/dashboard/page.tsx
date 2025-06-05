@@ -95,13 +95,11 @@ export default function AdminDashboard() {
   const [mostrarCrearProducto, setMostrarCrearProducto] = useState(false);
 
   useEffect(() => {
-    // Obtener cantidad de productos
     fetch('https://sg-studio-backend.onrender.com/productos')
       .then((res) => res.json())
       .then((data) => setCantidadProductos(data.length))
       .catch((err) => console.error('Error al obtener productos:', err));
 
-    // Obtener cantidad de categorías
     fetch('https://sg-studio-backend.onrender.com/categorias')
       .then((res) => res.json())
       .then((data) => setCantidadCategorias(data.length))
@@ -133,10 +131,8 @@ export default function AdminDashboard() {
 
   const handleFormularioGuardado = () => {
     setProductoEditar(null);
-    // opcional: recargar lista de productos si es necesario
   };
 
-  // Función centralizada para mostrar el formulario de "Crear Producto"
   const handleMostrarCrearProducto = () => {
     setShowProductos(true);
     setSoloListaProductos(false);
@@ -148,7 +144,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen flex bg-gray-50 text-gray-900 font-sans">
-      {/* Sidebar (con hover mejorado) */}
       <aside className="w-72 p-6 flex flex-col justify-between bg-white border-r border-gray-200 shadow-sm">
         <div>
           <h1 className="text-3xl font-extrabold mb-8 text-gray-900 text-center tracking-tight">
@@ -165,7 +160,7 @@ export default function AdminDashboard() {
               className="flex items-center gap-2 py-2 px-3 rounded hover:bg-gray-100 transition"
             >
               <Package className="w-5 h-5 text-gray-700" />
-              <span className="text-gray-700">Productos</span>
+              <span className="text-gray-700">....</span>
             </button>
             <button
               onClick={() => {
@@ -190,8 +185,6 @@ export default function AdminDashboard() {
               <LayoutList className="w-5 h-5 text-gray-700" />
               <span className="text-gray-700">Ver Productos</span>
             </button>
-
-            {/* Este botón ahora llama a handleMostrarCrearProducto */}
             <button
               onClick={handleMostrarCrearProducto}
               className="flex items-center gap-2 py-2 px-3 rounded 
@@ -212,7 +205,6 @@ export default function AdminDashboard() {
         </button>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-grow p-8 max-w-6xl mx-auto">
         <section className="mb-8 p-6 bg-white rounded-xl shadow-md">
           <h2 className="text-3xl font-extrabold mb-4 text-gray-900">
@@ -223,7 +215,6 @@ export default function AdminDashboard() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Tarjeta Productos */}
             <div className="bg-gray-100 rounded-lg p-5 flex items-center shadow-sm hover:shadow-md transition">
               <Package className="text-gray-800 w-8 h-8 mr-4" />
               <div>
@@ -234,7 +225,6 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Tarjeta Categorías */}
             <div className="bg-gray-100 rounded-lg p-5 flex items-center shadow-sm hover:shadow-md transition">
               <Layers3 className="text-gray-800 w-8 h-8 mr-4" />
               <div>
@@ -264,41 +254,27 @@ export default function AdminDashboard() {
                   onCancelar={() => setProductoEditar(null)}
                 />
               ) : (
-                <>
-                  {!mostrarCrearProducto ? (
+                mostrarCrearProducto && (
+                  <div className="space-y-2">
+                    <CrearProductoForm
+                      onGuardado={() => {
+                        setMostrarCrearProducto(false);
+                        handleFormularioGuardado();
+                      }}
+                    />
                     <button
-                      onClick={handleMostrarCrearProducto}
-                      className="mb-4 px-4 py-2 bg-gray-800 text-white rounded 
-                                 hover:bg-gray-200 hover:text-gray-900 hover:scale-105 
-                                 transition-transform transition-colors flex items-center gap-2"
+                      onClick={() => setMostrarCrearProducto(false)}
+                      className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition"
                     >
-                      <PlusCircle className="w-4 h-4" />
-                      <span>Crear nuevo producto</span>
+                      Cancelar
                     </button>
-                  ) : (
-                    <div className="space-y-2">
-                      <CrearProductoForm
-                        onGuardado={() => {
-                          setMostrarCrearProducto(false);
-                          handleFormularioGuardado();
-                        }}
-                      />
-                      <button
-                        onClick={() => setMostrarCrearProducto(false)}
-                        className="px-4 py-2 bg-gray-800 text-white rounded 
-                                   hover:bg-gray-700 transition"
-                      >
-                        Cancelar
-                      </button>
-                    </div>
-                  )}
-                </>
+                  </div>
+                )
               )}
             </div>
           )
         ) : (
           <div className="mt-6 flex flex-col lg:flex-row gap-6">
-            {/* Formulario para crear categoría */}
             <div className="bg-white p-6 rounded-xl shadow border border-gray-200 w-full lg:w-1/3">
               <div className="flex items-center gap-2 mb-4">
                 <PlusCircle className="w-5 h-5 text-gray-800" />
@@ -309,9 +285,7 @@ export default function AdminDashboard() {
               <CrearCategoriaForm />
             </div>
 
-            {/* Lista de categorías con scroll */}
             <div className="bg-white rounded-xl shadow border border-gray-200 flex-1 max-h-[450px] overflow-y-auto">
-              {/* Encabezado sticky */}
               <div className="sticky top-0 z-10 bg-white px-4 py-3 border-b border-gray-200">
                 <div className="flex items-center gap-2">
                   <Tags className="w-5 h-5 text-gray-800" />
@@ -320,7 +294,6 @@ export default function AdminDashboard() {
                   </h2>
                 </div>
               </div>
-              {/* Contenido */}
               <div className="p-4">
                 <ListaCategorias />
               </div>

@@ -26,7 +26,7 @@ export default function Navbar() {
       <nav className="fixed top-0 left-0 w-full z-50 px-8 py-4 bg-white text-black shadow-md">
         <div className="flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity">
-            CIAO BELLA
+            SG STUDIO
           </Link>
 
           <ul className="flex gap-6 text-sm font-medium">

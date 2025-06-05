@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import TextWithIcons from './components/TextWithIcons';
 
 const slides = ['/images/home2.jpg', '/images/home4.jpg']
 
@@ -68,6 +69,17 @@ export default function Home() {
   return (
     <main>
       <Slideshow slides={slides} />
+       <div
+        className="bg-black text-white py-4"
+        style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+      >
+        <marquee behavior="scroll" direction="left" scrollamount="6" loop="0">
+          <span className="mx-8 text-xl font-semibold">
+            TUS COMPRAS CON 3 Y 6 CUOTAS <strong className="text-2xl">SIN INTERESES</strong> – Consulta al coordinar tu compra por <strong>WhatsApp</strong>.
+          </span>
+
+        </marquee>
+      </div>
 
       <section className="py-8 bg-white">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 px-4">
@@ -108,18 +120,14 @@ export default function Home() {
             })}
         </div>
       </section>
+      <main>
+      {/* Otras secciones de tu página principal */}
 
-      <div
-        className="bg-black text-white py-4"
-        style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-      >
-        <marquee behavior="scroll" direction="left" scrollamount="6" loop="0">
-          <span className="mx-8 text-xl font-semibold">
-            TUS COMPRAS CON 3 Y 6 CUOTAS <strong className="text-2xl">SIN INTERESES</strong> – Consulta al coordinar tu compra por <strong>WhatsApp</strong>.
-          </span>
+      <TextWithIcons />
 
-        </marquee>
-      </div>
+      {/* Más secciones abajo si las tienes */}
+    </main>
+
       {productoAleatorio && (
         <div className="bg-white text-black py-16">
           <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center">
@@ -150,6 +158,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      
     </main>
   )
 }
