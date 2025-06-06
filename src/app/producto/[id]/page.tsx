@@ -3,17 +3,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 
-import {
-  ShoppingCart,
-  Tag,
-  Shirt,
-  Palette,
-  Layers,
-  Info,
-  ShieldCheck,
-  Package,
-} from 'lucide-react';
-
 export default function ProductoDetalle() {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
@@ -21,7 +10,7 @@ export default function ProductoDetalle() {
   const [error, setError] = useState(null);
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
 
-  // Estado para el zoom
+  // Zoom
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const [isHovering, setIsHovering] = useState(false);
 
@@ -46,7 +35,6 @@ export default function ProductoDetalle() {
         setLoading(false);
       }
     }
-
     if (id) fetchProducto();
   }, [id]);
 
@@ -72,7 +60,7 @@ export default function ProductoDetalle() {
     <div className="bg-white min-h-screen px-6 md:px-12 pt-24 md:pt-32 pb-12">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[auto_500px_1fr] gap-6">
 
-        {/* ── Columna 1: Miniaturas ── */}
+        {/* Miniaturas */}
         <div className="flex flex-row md:flex-col gap-3 items-center md:items-start">
           {imagen.map((img, index) => (
             <button
@@ -93,12 +81,10 @@ export default function ProductoDetalle() {
           ))}
         </div>
 
-        {/* ── Columna 2: Imagen principal con efecto lupa ── */}
+        {/* Imagen principal con lupa */}
         <div
           className="relative w-full h-[500px] shadow-md rounded-lg overflow-hidden flex items-center justify-center bg-gray-100"
-          style={{
-            cursor: isHovering ? 'zoom-in' : 'default',
-          }}
+          style={{ cursor: isHovering ? 'zoom-in' : 'default' }}
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
@@ -119,62 +105,58 @@ export default function ProductoDetalle() {
           )}
         </div>
 
-        {/* ── Columna 3: Detalles ── */}
+        {/* Detalles */}
         <div className="space-y-4 text-gray-800">
-          <h1 className="text-4xl font-bold mb-2">{nombre}</h1>
-          <p className="text-2xl text-red-700 font-semibold flex items-center gap-2">
-            <Tag className="w-5 h-5" /> S/ {precio}
+          <h1 className="text-4xl font-bold mb-1">{nombre}</h1>
+          <p className="text-2xl text-red-700 font-semibold">
+            PEN {precio}
           </p>
-          <p className="text-gray-600 italic">{descripcion}</p>
+
+          {/* Descripción minimalista */}
+          <p className="text-gray-600 text-sm truncate">
+            {descripcion}
+          </p>
 
           {categoria?.nombre && (
-            <p className="flex items-center gap-2">
-              <Layers className="w-5 h-5" />
+            <p className="text-sm">
               <strong>Categoría:</strong> {categoria.nombre}
             </p>
           )}
           {color && (
-            <p className="flex items-center gap-2">
-              <Palette className="w-5 h-5" />
+            <p className="text-sm">
               <strong>Color:</strong> {color}
             </p>
           )}
           {talla && (
-            <p className="flex items-center gap-2">
-              <Shirt className="w-5 h-5" />
+            <p className="text-sm">
               <strong>Talla:</strong> {talla}
             </p>
           )}
           {cantidad !== undefined && (
-            <p className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
+            <p className="text-sm">
               <strong>Stock:</strong> {cantidad}
             </p>
           )}
           {composicion && (
-            <p className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5" />
+            <p className="text-sm">
               <strong>Composición:</strong> {composicion}
             </p>
           )}
           {info && (
-            <p className="flex items-center gap-2">
-              <Info className="w-5 h-5" />
+            <p className="text-sm">
               <strong>Info:</strong> {info}
             </p>
           )}
           {cuidados && (
-            <p className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5" />
+            <p className="text-sm">
               <strong>Cuidados:</strong> {cuidados}
             </p>
           )}
 
           <button
-            className="btn-animated w-full"
+            className="btn-animated w-full text-sm"
             style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
           >
-            <ShoppingCart className="w-5 h-5" />
             Añadir al carrito
           </button>
         </div>
