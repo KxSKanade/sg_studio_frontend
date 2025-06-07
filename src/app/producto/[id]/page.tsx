@@ -83,7 +83,7 @@ export default function ProductoDetalle() {
 
         {/* Imagen principal con lupa */}
         <div
-          className="relative w-full h-[500px] shadow-md rounded-lg overflow-hidden flex items-center justify-center bg-gray-100"
+          className="relative w-full h-[800px] shadow-md rounded-lg overflow-hidden flex items-center justify-center bg-gray-100"
           style={{ cursor: isHovering ? 'zoom-in' : 'default' }}
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovering(true)}
@@ -107,58 +107,27 @@ export default function ProductoDetalle() {
 
         {/* Detalles */}
         <div className="space-y-4 text-gray-800">
-          <h1 className="text-4xl font-bold mb-1">{nombre}</h1>
-          <p className="text-2xl text-red-700 font-semibold">
+          <h1 className="text-4xl mb-1">{nombre}</h1>
+          <p className="text-2xl text-red-700">
             PEN {precio}
           </p>
-
-          {/* Descripción minimalista */}
-          <p className="text-gray-600 text-sm truncate">
-            {descripcion}
-          </p>
-
-          {categoria?.nombre && (
-            <p className="text-sm">
-              <strong>Categoría:</strong> {categoria.nombre}
-            </p>
-          )}
-          {color && (
-            <p className="text-sm">
-              <strong>Color:</strong> {color}
-            </p>
-          )}
-          {talla && (
-            <p className="text-sm">
-              <strong>Talla:</strong> {talla}
-            </p>
-          )}
-          {cantidad !== undefined && (
-            <p className="text-sm">
-              <strong>Stock:</strong> {cantidad}
-            </p>
-          )}
-          {composicion && (
-            <p className="text-sm">
-              <strong>Composición:</strong> {composicion}
-            </p>
-          )}
-          {info && (
-            <p className="text-sm">
-              <strong>Info:</strong> {info}
-            </p>
-          )}
-          {cuidados && (
-            <p className="text-sm">
-              <strong>Cuidados:</strong> {cuidados}
-            </p>
-          )}
-
+          <br></br>
+          <hr></hr>
+          <h5 className="text-sm">{color}</h5>
+          <br></br>
           <button
             className="btn-animated w-full text-sm"
             style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
           >
             Añadir al carrito
           </button>
+          <br></br>
+          <br></br>
+          {/* Descripción minimalista */}
+          <p className="text-gray-600 text-sm truncate">
+            {descripcion}
+          </p>
+
         </div>
       </div>
     </div>
