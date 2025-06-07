@@ -1,14 +1,19 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function ProductoDetalle() {
   const { id } = useParams();
+  const router = useRouter();
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
+
+  // Estado para productos recomendados
+  const [recomendados, setRecomendados] = useState([]);
+  const [loadingRec, setLoadingRec] = useState(true);
 
   // Zoom
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
@@ -21,6 +26,7 @@ export default function ProductoDetalle() {
     setZoomPosition({ x, y });
   };
 
+  // Fetch producto actual
   useEffect(() => {
     async function fetchProducto() {
       try {
@@ -38,6 +44,27 @@ export default function ProductoDetalle() {
     if (id) fetchProducto();
   }, [id]);
 
+  // Fetch productos y elegir aleatorios
+  useEffect(() => {
+    async function fetchRecomendados() {
+      try {
+        const res = await fetch('https://sg-studio-backend.onrender.com/productos');
+        if (!res.ok) throw new Error('Error al obtener recomendados');
+        const datos = await res.json();
+        // Filtrar para no incluir el producto actual
+        const otros = datos.filter(p => String(p.id) !== String(id));
+        // Barajar y tomar 4
+        const shuffled = otros.sort(() => 0.5 - Math.random());
+        setRecomendados(shuffled.slice(0, 4));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingRec(false);
+      }
+    }
+    if (!loading) fetchRecomendados();
+  }, [loading, id]);
+
   if (loading) return <p className="p-12 text-center">Cargando producto...</p>;
   if (error) return <p className="p-12 text-center text-red-600">{error}</p>;
   if (!producto) return <p className="p-12 text-center">Producto no encontrado</p>;
@@ -48,12 +75,6 @@ export default function ProductoDetalle() {
     precio,
     imagen = [],
     color,
-    talla,
-    cantidad,
-    composicion,
-    info,
-    cuidados,
-    categoria,
   } = producto;
 
   return (
@@ -108,27 +129,49 @@ export default function ProductoDetalle() {
         {/* Detalles */}
         <div className="space-y-4 text-gray-800">
           <h1 className="text-4xl mb-1">{nombre}</h1>
-          <p className="text-2xl text-red-700">
-            PEN {precio}
-          </p>
-          <br></br>
-          <hr></hr>
+          <p className="text-2xl text-black-700">PEN {precio}</p>
+          <hr />
           <h5 className="text-sm">{color}</h5>
-          <br></br>
           <button
             className="btn-animated w-full text-sm"
             style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
           >
             Añadir al carrito
           </button>
-          <br></br>
-          <br></br>
-          {/* Descripción minimalista */}
-          <p className="text-gray-600 text-sm truncate">
-            {descripcion}
-          </p>
-
+          <p className="text-gray-600 text-sm truncate">{descripcion}</p>
         </div>
+      </div>
+
+      {/* Sección Te puede interesar */}
+      <div className="max-w-6xl mx-auto mt-16">
+        <h5 className="text-2xl mb-4 text-black">Te puede interesar</h5>
+        {loadingRec ? (
+          <p>Cargando recomendaciones...</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {recomendados.map(item => (
+              <div
+                key={item.id}
+                className="cursor-pointer hover:shadow-lg transition p-4 border rounded"
+                onClick={() => router.push(`/productos/${item.id}`)}
+              >
+                <div className="w-full h-48 relative">
+                  {item.imagen?.[0] && (
+                    <Image
+                      src={item.imagen[0]}
+                      alt={item.nombre}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="rounded"
+                    />
+                  )}
+                </div>
+                <h3 className="mt-2 text-black font-medium truncate">{item.nombre}</h3>
+                <p className="text-sm text-black">PEN {item.precio}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
